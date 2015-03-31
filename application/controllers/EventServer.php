@@ -3,7 +3,7 @@
 require_once("library/vendor/autoload.php");
 use predictionio\EventClient;
 
-class EventServer extends CI_Controller {
+class EventServer extends Fit_Controller {
 
 	private $accessKey = 'wERSmq7bExLqaTR9FyJKMJtEOTu0ikH74Sf4ovyLc8G3vWGNsSX2NCa29YVshWLu';
 	private $eventServerURL = 'http://163.152.21.217:7070';
