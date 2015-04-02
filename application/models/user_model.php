@@ -14,6 +14,11 @@ class User_model extends CI_Model {
 		$this->db->set('Registered', 'NOW()', FALSE);
 		$this->db->insert('User');
 	}
+
+	function getByEmail($email)
+	{
+		return $this->db->get_where('User', array('Email' => $email))->row();
+	}
 }
 
 ?>
