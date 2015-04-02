@@ -22,12 +22,12 @@ class Authentication extends Fit_Controller {
 		}
 		else
 		{
-			$this->load->model('User_model');
+			$this->load->model('user_model');
 			if (function_exists('password_hash'))
 				$hashedPassword = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
 			else
 				$hashedPassword = $this->input->post('password');
-			$this->User_model->register(array(
+			$this->user_model->register(array(
 				'email' => $this->input->post('email'),
 				'password' => $hashedPassword,
 				'firstName' => $this->input->post('firstName'),
