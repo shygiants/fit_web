@@ -7,14 +7,14 @@ class Authentication extends Fit_Controller {
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('email', 'Email Address', 'required | valid_email | is_unique[User.Email]');
-		$this->form_validation->set_rules('password', 'Password', 'required | min_length[8] | max_length[20] | matches[re_password]');
-		$this->form_validation->set_rules('re_password', 'Confirm Password', 'required | min_length[8] | max_length[20]');
+		$this->form_validation->set_rules('password', 'Password', 'required | min_length[8] | max_length[20] | matches[rePassword]');
+		$this->form_validation->set_rules('rePassword', 'Confirm Password', 'required | min_length[8] | max_length[20]');
 		$this->form_validation->set_rules('firstName', 'First Name', 'required | max_length[20]');
 		$this->form_validation->set_rules('lastName', 'Last Name', 'required | max_length[20]');
 		
 		if ($this->form_validation->run() == FALSE)
 		{
-			_response(array('success' => 'false')); // TODO: Return what's wrong
+			$this->_response(array('is_registered' => 'false')); // TODO: Return what's wrong
 		}
 		else
 		{
@@ -29,7 +29,8 @@ class Authentication extends Fit_Controller {
 				'firstName' => $this->input->post('firstName'),
 				'lastName' => $this->input->post('lastName')));
 
-			_response(array('success' => 'true'));
+			$this->session->set_userdata('is_login', true);
+			$this->_response(array('is_registered' => 'true'));
 		}
 	}
 
@@ -40,8 +41,9 @@ class Authentication extends Fit_Controller {
 		$this->form_validation->set_rules('email', 'Email Address', 'required | valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required | min_length[8] | max_length[20]');
 		
+		// Wrong Input Form
 		if ($this->form_validation->run() == FALSE)
-			_response(array('authorized' => 'false')); // TODO: Let's make structured response
+			$this->_response(array('is_authenticated' => 'false')); // TODO: Let's make structured response
 		else
 		{
 			$this->load->model('user_model');
@@ -50,18 +52,14 @@ class Authentication extends Fit_Controller {
 			if (!function_exists('password_verify'))
 				$this->load->helper('password_helper');
 
-			if (password_verify($this->input->post('password'), $userData->Password))
+			// There is not that email or password is wrong
+			if ($userData != null && password_verify($this->input->post('password'), $userData->Password))
 			{
 				$this->session->set_userdata('is_login', true);
-				_response(array('authorized' => 'true'));
+				$this->_response(array('is_authenticated' => 'true'));
 			}
 			else
-				_response(array('authorized' => 'false'));
+				$this->_response(array('is_authenticated' => 'false'));
 		}
-	}
-
-	function _response($response)
-	{
-		$this->output->set_content_type('application/json')->set_output(json_encode($response));
 	}
 }

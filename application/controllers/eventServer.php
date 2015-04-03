@@ -8,10 +8,6 @@ class EventServer extends Fit_Controller {
 	private $accessKey = 'wERSmq7bExLqaTR9FyJKMJtEOTu0ikH74Sf4ovyLc8G3vWGNsSX2NCa29YVshWLu';
 	private $eventServerURL = 'http://163.152.21.217:7070';
 
-	public function index()
-	{
-	}
-
 	public function rate()
 	{
 		// TODO: Form validation
@@ -32,7 +28,8 @@ class EventServer extends Fit_Controller {
 						'targetEntityId' => $itemId,
 						'properties' => array('rating' => $rating)
 						));
-		$this->output->set_content_type('application/json')->set_output(json_encode($response));
+		
+		$this->_response($response);
 		// var_dump($response);
 	}
 
