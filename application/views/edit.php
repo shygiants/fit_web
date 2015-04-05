@@ -25,26 +25,41 @@
 						</div>
 					</div>
 					<?php
-					for ($iter = 0; $iter < count($attributes); $iter++) {
+					foreach ($attributes as $key=>$attribute) {
 					?>
 						<div class="col s2">
-							<h5 class="section"><?=$attributes[$iter]->label?></h5>
-							<div class="row">		
+							<h5 class="section"><?=$attribute->label?></h5>
+							<div class="row">
 							<?php
-							foreach ($attributes[$iter]->table as $row)
+							$etcExist = false;
+							foreach ($attribute->table as $id=>$row)
 							{
+								if ($row->id == 0)
+								{
+									$etcExist = true;
+									continue;
+								}
 							?>
 								<div>
-									<input name="<?=$attributes[$iter]->label?>" type="radio" id="<?=$attributes[$iter]->label.$row->id?>" value="<?=$row->id?>"/>
-									<label for="<?=$attributes[$iter]->label.$row->id?>"><?=$row->label?></label>
+									<input name="<?=$attribute->name?>" type="radio" id="<?=$attribute->name.$row->id?>" value="<?=$row->id?>"/>
+									<label for="<?=$attribute->name.$row->id?>"><?=$row->label?></label>
 								</div>
 							<?php
+								if ($id == (count($attribute->table) - 1) && $etcExist)
+								{
+							?>
+									<div>
+										<input name="<?=$attribute->name?>" type="radio" id="<?=$attribute->name.$attribute->table[0]->id?>" value="<?=$attribute->table[0]->id?>"/>
+										<label for="<?=$attribute->name.$attribute->table[0]->id?>"><?=$attribute->table[0]->label?></label>
+									</div>
+							<?php
+								}
 							}
 							?>
 							</div>
 						</div>
 						<?php
-						if ($iter == 4 || (($iter - 4) % 6) == 0)
+						if ($key == 4 || (($key - 4) % 6) == 0)
 						{
 						?>
 							</div>
