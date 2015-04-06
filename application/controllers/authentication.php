@@ -6,19 +6,20 @@ class Authentication extends Fit_Controller {
 	{
 		$this->load->library('form_validation');
 
-		$this->form_validation->set_rules('email', 'Email Address', 'required | valid_email | is_unique[User.Email]');
+		$this->form_validation->set_rules('email', 'Email Address', 'required | valid_email | is_unique[User.email]');
 		$this->form_validation->set_rules('password', 'Password', 'required | min_length[8] | max_length[20] | matches[rePassword]');
 		$this->form_validation->set_rules('rePassword', 'Confirm Password', 'required | min_length[8] | max_length[20]');
 		$this->form_validation->set_rules('firstName', 'First Name', 'required | max_length[20]');
 		$this->form_validation->set_rules('lastName', 'Last Name', 'required | max_length[20]');
 		
-		if ($this->form_validation->run() == FALSE)
+		$this->load->model('user_model');
+
+		if ($this->form_validation->run() == FALSE || $this->user_model->getByEmail($this->input->post('email')) != null)
 		{
 			$this->_response(array('is_registered' => 'false')); // TODO: Return what's wrong
 		}
 		else
 		{
-			$this->load->model('user_model');
 			if (!function_exists('password_hash'))
 				$this->load->helper('password_helper');
 			

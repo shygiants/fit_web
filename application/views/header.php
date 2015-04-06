@@ -11,17 +11,41 @@
 					padding-left: 16px;
 					padding-right: 16px;
 				}
+				body {
+					display: flex;
+					min-height: 100vh;
+					flex-direction: column;
+				}
+
+				main {
+				flex: 1 0 auto;
+				}
 				
 			</style>
 			<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		</head>
 		<body class="grey lighten-4">
-			<nav>
-				<div class="nav-wrapper light-green darken-3">
-					<a href="#" class="brand-logo center">fit</a>
-					<ul id="nav-mobile" class="right hide-on-med-and-down">
-						<!-- <li><a href="#">Sign in</a></li> -->
-					</ul>
-				</div>
-			</nav>
-			
+			<header>
+				<nav>
+					<div class="nav-wrapper light-green darken-3">
+						<a href="<?=base_url('graphic')?>" class="brand-logo center">fit</a>
+						<ul id="nav-mobile" class="right hide-on-med-and-down">
+							<!-- Modal Trigger -->
+							<?php
+							if (!$is_login)
+							{
+							?>
+								<li><a class="waves-effect waves-light modal-trigger" href="#modal_register">회원가입</a></li>
+								<li><a class="waves-effect waves-light modal-trigger" href="#modal_login">로그인</a></li>
+							<?php
+							} else {
+							?>	<li><a class="waves-effect waves-light" href="<?=base_url('graphic/edit')?>">추가</a></li>
+								<li><a class="waves-effect waves-light" href="<?=base_url('graphic/logout')?>">로그아웃</a></li>
+							<?php
+							}
+							?>
+						</ul>
+					</div>
+				</nav>
+			</header>
+			<main>
