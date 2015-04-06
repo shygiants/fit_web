@@ -4,7 +4,9 @@ class Graphic extends Fit_Controller {
 
 	function _header()
 	{
-		$this->load->view('header', array('is_login' => $this->session->userdata('is_login')));	
+		$this->load->view('header', array(
+			'is_login' => $this->session->userdata('is_login'),
+			'is_editor' => $this->session->userdata('is_editor')));	
 	}
 
 	public function index()
@@ -46,7 +48,7 @@ class Graphic extends Fit_Controller {
 					$this->session->set_userdata('is_editor', true);
 					$this->session->set_userdata('editor_id', $userData->editor_id);
 				}
-				redirect('graphic/edit');
+				redirect('graphic/feed');
 				return;
 			}
 		}
@@ -100,8 +102,7 @@ class Graphic extends Fit_Controller {
 
 	public function feed()
 	{
-		if (!($this->session->userdata('is_login'))
-		 || !($this->session->userdata('is_editor')))
+		if (!($this->session->userdata('is_login')))
 		{
 			redirect('graphic');
 			return;
@@ -146,7 +147,7 @@ class Graphic extends Fit_Controller {
 				'lastName' => $this->input->post('lastName')));
 
 			$this->session->set_userdata('is_login', true);
-			redirect('graphic/edit');
+			redirect('graphic/feed');
 		}
 	}
 }

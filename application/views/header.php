@@ -39,7 +39,13 @@
 								<li><a class="waves-effect waves-light modal-trigger" href="#modal_login">로그인</a></li>
 							<?php
 							} else {
-							?>	<li><a class="waves-effect waves-light" href="<?=base_url('graphic/edit')?>">추가</a></li>
+								if ($is_editor)
+								{
+							?>		
+									<li><a class="waves-effect waves-light" href="<?=base_url('graphic/edit')?>">추가</a></li>
+								<?php
+								}
+								?>
 								<li><a class="waves-effect waves-light" href="<?=base_url('graphic/logout')?>">로그아웃</a></li>
 							<?php
 							}

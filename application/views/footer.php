@@ -13,7 +13,7 @@
 			</div>
 		</footer>
 		<div id="modal_register" class="modal">
-			<form action="<?=site_url('graphic/register')?>" method="post">
+			<form action="<?=base_url('graphic/register')?>" method="post">
 				<div class="modal-content">
 					<h4>회원가입</h4>
 					<p>
@@ -53,7 +53,7 @@
 			</form>
 		</div>
 		<div id="modal_login" class="modal">
-			<form action="<?=site_url('graphic/login')?>" method="post">
+			<form action="<?=base_url('graphic/login')?>" method="post">
 				<div class="modal-content">
 					<h4>로그인</h4>
 					<p>
