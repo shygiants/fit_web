@@ -27,7 +27,7 @@
 					<?php
 					foreach ($attributes as $key=>$attribute) {
 					?>
-						<div class="col s2">
+						<div class="col s2 hide">
 							<h5 class="section"><?=$attribute->label?></h5>
 							<div class="row">
 							<?php
@@ -74,7 +74,27 @@
 			</form>
 		</div>
 		<div class="col s4">
-			<img src="#">
+			<div class="col s12 center" style="height: 900px">
+				<img src="#" id="item_img" class="responsive-img card">
+			</div>
 		</div>
 	</div>
 </div>
+<script type="text/javascript" src="<?=base_url('library/materialize/js/materialize.min.js')?>"></script>	
+<script>
+	$( "input" ).on( "click", function() {
+		if ($( "input:checked" ).val() == '남성')
+		{
+			$(".hide").removeClass("hide");
+		}
+	});
+
+	$('#item_img').error(function() {
+		$('#item_img').attr('src', '../resource/images/subimage.jpg');
+	});
+	
+	$('#src_link').keyup(function() {
+		$('#item_img').attr('src', $('#src_link').val());
+		Materialize.fadeInImage('#item_img');	
+	});
+</script>

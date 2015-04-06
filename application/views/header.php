@@ -11,7 +11,9 @@
 					padding-left: 16px;
 					padding-right: 16px;
 				}
+				
 			</style>
+			<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		</head>
 		<body class="grey lighten-4">
 			<nav>
