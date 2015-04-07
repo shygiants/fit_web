@@ -40,13 +40,23 @@ class Item_model extends CI_Model {
 		$this->db->set('created_date', 'NOW()', FALSE);
 		$this->db->insert('Item', $data);
 
-		$this->db->insert_id();
+		$id = $this->db->insert_id();
+
+		$this->load->helper('path');
+
+		$file_name = $data['editor_id'].'_'.$id.'.jpg';
+
+		$relative_path = 'resource/itemImg/';
+		$absolute_path = set_realpath($relative_path); 
+		$destination_path = $absolute_path.$file_name;
+		copy($data['img_path'], $destination_path);
+
+		$this->db->where('id', $id);
+		$this->db->update('Item', array('img_path' => $relative_path.$file_name));
 	}
 
 	function get($editor_id = 0)
 	{
-		
-		
 		$query = $this->db
 		->select('img_path, src_link, 
 			Gender.label 성별,

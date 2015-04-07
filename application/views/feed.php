@@ -11,7 +11,7 @@
 			?>
 				<div class="card">
 					<div class="card-image">
-						<img src="<?=$data[$key]->img_path?>">
+						<img src="<?=base_url($data[$key]->img_path)?>">
 					</div>
 					<div class="card-content right">
 						<h6 class="blue-grey-text text-lighten-2">
