@@ -149,7 +149,7 @@ class Graphic extends Fit_Controller {
 			$this->session->set_userdata('is_login', true);
 			redirect('graphic/feed');
 		}
-	}}
+	}
 }
-
 ?>
+
