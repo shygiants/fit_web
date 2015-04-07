@@ -149,13 +149,7 @@ class Graphic extends Fit_Controller {
 			$this->session->set_userdata('is_login', true);
 			redirect('graphic/feed');
 		}
-	}
-
-	public function test()
-	{
-		$this->load->helper('path');
-		echo set_realpath('resource/itemImg');
-	}
+	}}
 }
 
 ?>
