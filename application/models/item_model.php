@@ -79,11 +79,16 @@ class Item_model extends CI_Model {
 
 	function getCardData($editor_id = 0)
 	{
-		return $this->db
+		$result = $this->db
 		->select('img_path, Item.editor_id, first_name, last_name')
 		->from('Item, User')
 		->where('User.editor_id = Item.editor_id')
 		->get()->result();
+
+		foreach ($result as $row)
+			$row->img_path = base_url($row->img_path);
+		
+		return $result;
 	}
 }
 
