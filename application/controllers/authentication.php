@@ -4,17 +4,14 @@ class Authentication extends Fit_Controller {
 
 	public function register()
 	{
-		$this->load->library('form_validation');
+		// TODO: Post validation
 
-		$this->form_validation->set_rules('email', 'Email Address', 'required | valid_email | is_unique[User.email]');
-		$this->form_validation->set_rules('password', 'Password', 'required | min_length[8] | max_length[20] | matches[rePassword]');
-		$this->form_validation->set_rules('rePassword', 'Confirm Password', 'required | min_length[8] | max_length[20]');
-		$this->form_validation->set_rules('firstName', 'First Name', 'required | max_length[20]');
-		$this->form_validation->set_rules('lastName', 'Last Name', 'required | max_length[20]');
-		
 		$this->load->model('user_model');
 
-		if ($this->form_validation->run() == FALSE || $this->user_model->getByEmail($this->input->post('email')) != null)
+		if (!$this->input->post())
+			$this->_response(array('is_registered' => 'false'));
+
+		if ($this->user_model->getByEmail($this->input->post('email')) != null)
 		{
 			$this->_response(array('is_registered' => 'false')); // TODO: Return what's wrong
 		}
@@ -24,11 +21,14 @@ class Authentication extends Fit_Controller {
 				$this->load->helper('password_helper');
 			
 			$hashedPassword = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
-			$this->user_model->register(array(
+			$userData = array(
 				'email' => $this->input->post('email'),
 				'password' => $hashedPassword,
-				'firstName' => $this->input->post('firstName'),
-				'lastName' => $this->input->post('lastName')));
+				'first_name' => $this->input->post('first_name'),
+				'last_name' => $this->input->post('last_name'),
+				);
+			$userData['password'] = $hashedPassword;
+			$this->user_model->register($userData);
 
 			$this->session->set_userdata('is_login', true);
 			$this->_response(array('is_registered' => 'true'));
@@ -37,30 +37,33 @@ class Authentication extends Fit_Controller {
 
 	public function login()
 	{
-		$this->load->library('form_validation');
-
-		$this->form_validation->set_rules('email', 'Email Address', 'required | valid_email');
-		$this->form_validation->set_rules('password', 'Password', 'required | min_length[8] | max_length[20]');
+		$this->load->model('user_model');
+		$userData = $this->user_model->getByEmail($this->input->post('email'));
 		
-		// Wrong Input Form
-		if ($this->form_validation->run() == FALSE)
-			$this->_response(array('is_authenticated' => 'false')); // TODO: Let's make structured response
+		if (!function_exists('password_verify'))
+			$this->load->helper('password_helper');
+
+		// There is not that email or password is wrong
+		if ($userData != null && 
+			password_verify($this->input->post('password'), $userData->password))
+		{
+			$this->session->set_userdata('is_login', true);
+			$this->_response(array('is_authenticated' => 'true'));
+		}
+		else
+			$this->_response(array('is_authenticated' => 'false'));
+	}
+
+	public function checkLogin()
+	{
+		if ($this->session->userdata('is_login'))
+		{
+			$this->_response(array('is_login' => 'true'));
+		}
 		else
 		{
-			$this->load->model('user_model');
-			$userData = $this->user_model->getByEmail($this->input->post('email'));
-			
-			if (!function_exists('password_verify'))
-				$this->load->helper('password_helper');
-
-			// There is not that email or password is wrong
-			if ($userData != null && password_verify($this->input->post('password'), $userData->Password))
-			{
-				$this->session->set_userdata('is_login', true);
-				$this->_response(array('is_authenticated' => 'true'));
-			}
-			else
-				$this->_response(array('is_authenticated' => 'false'));
+			$this->_response(array('is_login' => 'false'));	
 		}
+
 	}
 }

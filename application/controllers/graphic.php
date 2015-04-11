@@ -143,8 +143,8 @@ class Graphic extends Fit_Controller {
 			$this->user_model->register(array(
 				'email' => $this->input->post('email'),
 				'password' => $hashedPassword,
-				'firstName' => $this->input->post('firstName'),
-				'lastName' => $this->input->post('lastName')));
+				'first_name' => $this->input->post('firstName'),
+				'last_name' => $this->input->post('lastName')));
 
 			$this->session->set_userdata('is_login', true);
 			redirect('graphic/feed');
