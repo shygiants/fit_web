@@ -1,5 +1,5 @@
 <?php
-class Item_model extends CI_Model {
+class Fashion_model extends CI_Model {
 	function __construct()
 	{
 		parent::__construct();
@@ -10,33 +10,53 @@ class Item_model extends CI_Model {
 		require_once("application/libraries/Attribute.php");
 
 		$attributes = array(
+			new Attribute('gender_id', '성별', $this->db->get('Gender')->result()),
 			new Attribute('season_id', '시즌', $this->db->get('Season')->result()),
 			new Attribute('style_id', '스타일', $this->db->get('Style')->result()),
 			new Attribute('look_id', '체형', $this->db->get('Look')->result()),
 			new Attribute('height_id', '키', $this->db->get('Height')->result()),
-			new Attribute('age_id', '나이', $this->db->get('Age')->result()),
-			new Attribute('outer_id', '아우터 종류', $this->db->get('Outer')->result()),
-			new Attribute('outer_color_id', '아우터 색', $this->db->get('Color')->result()),
-			new Attribute('outer_pattern_id', '아우터 무늬', $this->db->get('Pattern')->result()),
-			new Attribute('top_id', '상의 종류', $this->db->get('Top')->result()),
-			new Attribute('top_color_id', '상의 색', $this->db->get('Color')->result()),
-			new Attribute('top_pattern_id', '상의 무늬', $this->db->get('Pattern')->result()),
-			new Attribute('bottom_id', '하의 종류', $this->db->get('Bottom')->result()),
-			new Attribute('bottom_color_id', '하의 색', $this->db->get('Color')->result()),
-			new Attribute('bottom_pattern_id', '하의 무늬', $this->db->get('Pattern')->result()),
-			new Attribute('shoe_id', '신발 종류', $this->db->get('Shoe')->result()),
-			new Attribute('shoe_color_id', '신발 색', $this->db->get('Color')->result()),
-			new Attribute('shoe_pattern_id', '신발 무늬', $this->db->get('Pattern')->result()),
-			new Attribute('hat_id', '모자 종류', $this->db->get('Hat')->result()),
-			new Attribute('hat_color_id', '모자 색', $this->db->get('Color')->result()),
-			new Attribute('hat_pattern_id', '모자 무늬', $this->db->get('Pattern')->result())
+			new Attribute('age_id', '나이', $this->db->get('Age')->result())
 			);
 
 		return $attributes;
 	}
 
+	function getClass()
+	{
+		return $this->db->get('Class')->result();
+	}
+
+	function getItemTypeByClass()
+	{
+		$classes = $this->db->select('id')->get('Class')->result();
+		foreach ($classes as $class) {
+			$result[$class->id] = $this->db->get_where('ItemType', array('class_id' => $class->id))->result();
+		}
+
+		return $result;
+	}
+
+	function getItemType()
+	{
+		return $this->db->get('ItemType')->result();
+	}
+
+	function getColor()
+	{
+		return $this->db->get('Color')->result();
+	}
+
+	function getPattern()
+	{
+		return $this->db->get('Pattern')->result();
+	}
+
 	function add($data)
 	{
+		foreach ($data as $key => $token) {
+			if ($key)
+		}
+
 		$this->db->set('created_date', 'NOW()', FALSE);
 		$this->db->insert('Item', $data);
 

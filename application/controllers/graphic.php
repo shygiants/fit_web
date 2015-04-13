@@ -71,10 +71,14 @@ class Graphic extends Fit_Controller {
 			redirect('graphic');
 			return;
 		}
-		$this->load->model('item_model');
+		$this->load->model('fashion_model');
 
 		$data = array(
-			'attributes' => $this->item_model->getAttributes(),
+			'classes' => $this->fashion_model->getClass(),
+			'types' => $this->fashion_model->getItemTypeByClass(),
+			'colors' => $this->fashion_model->getColor(),
+			'patterns' => $this->fashion_model->getPattern(),
+			'attributes' => $this->fashion_model->getAttributes(),
 			'editor_id' => $this->session->userdata('editor_id')
 			);
 
@@ -92,12 +96,14 @@ class Graphic extends Fit_Controller {
 			redirect('graphic');
 			return;
 		}
-		$this->load->model('item_model');
-		$itemData = $this->input->post();
+		$this->load->model('fashion_model');
+		$fashionData = $this->input->post();
 		
-		$this->item_model->add($itemData);
+		var_dump($fashionData);
 
-		redirect('graphic/feed');
+		// $this->fashion_model->add($fashionData);
+
+		// redirect('graphic/feed');
 	}
 
 	public function feed()
@@ -108,10 +114,10 @@ class Graphic extends Fit_Controller {
 			return;
 		}
 
-		$this->load->model('item_model');
+		$this->load->model('fashion_model');
 
 		$this->_header();
-		$data = array('data' => $this->item_model->getCardData());
+		$data = array('data' => $this->fashion_model->getCardData());
 		
 		$this->load->view('feed', $data);
 		$this->load->view('footer');

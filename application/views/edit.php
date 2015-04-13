@@ -6,6 +6,11 @@
 			<form action="<?=base_url('graphic/add')?>" method="post">
 				<input name="editor_id" type="hidden" value="<?=$editor_id?>">
 				<div class="row">
+					<button class="btn waves-effect waves-light green" type="submit">등록
+						<i class="mdi-content-send right"></i>
+					</button>
+				</div> 
+				<div class="row" id="fashion">
 					<div class="input-field col s6">
 						<input name="src_link" id="src_link" type="url" class="validate">
 						<label for="src_link">출처 링크</label>
@@ -16,87 +21,103 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col s2">
-						<h5 class="section">성별</h5>
-						<div class="row">
-							<div>
-								<input name="gender_id" id="gender_man" type="radio" class="validate" value="1">
-								<label for="gender_man">남성</label>
-							</div>
-							<div>
-								<input name="gender_id" id="gender_woman" type="radio" class="validate" value="2">
-								<label for="gender_woman">여성</label>
-							</div>
-						</div>
+				<?php
+				foreach ($attributes as $key => $attribute) 
+				{
+				?>
+					<div class="input-field col s3">
+						<select name="<?=$attribute->name?>">
+							<option value="" disabled selected><?=$attribute->label?> 선택</option>
+						<?php
+						foreach ($attribute->table as $key => $row) 
+						{
+						?>
+							<option value="<?=$row->id?>"><?=$row->label?></option>
+						<?php
+						}
+						?>
+						</select>
 					</div>
+
+				<?php
+				}
+				?>
+				</div>
+			</form>
+			<div class="row">
+				<div class="col s12">
+					<ul class="tabs row grey lighten-4">
 					<?php
-					foreach ($attributes as $key=>$attribute) {
+					foreach ($classes as $key => $class) 
+					{
 					?>
-						<div class="col s2 hide">
-							<h5 class="section"><?=$attribute->label?></h5>
+						<li class="tab col s2"><a <?=($key == 0)? 'class="active"' : ''?> href="#class<?=$class->id?>"><?=$class->label?> 추가</a></li>
+					<?php
+					}
+					?>
+					</ul>
+				</div>
+				<?php
+				foreach ($classes as $class) 
+				{
+				?>
+					<div id="class<?=$class->id?>" class="col s12">
+						<div class="col s4 input-field">
+							<h5 class="section"><?=$class->label?> 타입 선택</h5>
 							<div class="row">
 							<?php
-							$etcExist = false;
-							foreach ($attribute->table as $id=>$row)
+							foreach ($types[$class->id] as $type) 
 							{
-								if ($row->id == 0)
-								{
-									$etcExist = true;
-									continue;
-								}
-
-								if (property_exists($row, 'gender_id'))
-									switch ($row->gender_id) {
-										case 1:
-											$class = 'hide man';
-											break;
-										case 2:
-											$class = 'hide woman';
-											break;
-										case 3:
-											$class = 'hide both';
-											break;
-									}
-								else
-									$class = 'hide';
 							?>
-								<div class="<?=$class?>">
-									<input name="<?=$attribute->name?>" type="radio" id="<?=$attribute->name.$row->id?>" value="<?=$row->id?>"/>
-									<label for="<?=$attribute->name.$row->id?>"><?=$row->label?></label>
+								<div>
+									<input name="type<?=$class->id?>" type="radio" id="type<?=$class->id.'_'.$type->id?>" value="<?=$type->id?>"/>
+									<label for="type<?=$class->id.'_'.$type->id?>"><?=$type->label?></label>
 								</div>
 							<?php
-								if ($id == (count($attribute->table) - 1) && $etcExist)
-								{
-							?>
-									<div class="<?=$class?>">
-										<input name="<?=$attribute->name?>" type="radio" id="<?=$attribute->name.$attribute->table[0]->id?>" value="<?=$attribute->table[0]->id?>"/>
-										<label for="<?=$attribute->name.$attribute->table[0]->id?>"><?=$attribute->table[0]->label?></label>
-									</div>
-							<?php
-								}
 							}
 							?>
 							</div>
 						</div>
-						<?php
-						if ($key == 4 || (($key - 4) % 6) == 0)
-						{
-						?>
-							</div>
+						<div class="col s4 input-field">
+							<h5 class="section"><?=$class->label?> 색깔 선택</h5>
 							<div class="row">
-						<?php
-						}
-						?>
-					<?php
-					}
-					?>
-				</div>
-				<div class="row">
-					<button class="btn waves-effect waves-light green" type="submit">등록
-						<i class="mdi-content-send right"></i>
-					</button>
-				</div>
-			</form>
+							<?php
+							foreach ($colors as $color) 
+							{
+							?>
+								<div class="<?=$class->label?>">
+									<input name="color<?=$class->id?>" type="radio" id="color<?=$class->id.'_'.$color->id?>" value="<?=$color->id?>"/>
+									<label for="color<?=$class->id.'_'.$color->id?>"><?=$color->label?></label>
+								</div>
+							<?php
+							}
+							?>
+							</div>
+						</div>
+						<div class="col s4 input-field">
+							<h5 class="section"><?=$class->label?> 무늬 선택</h5>
+							<div class="row">
+							<?php
+							foreach ($patterns as $pattern) 
+							{
+							?>
+								<div class="<?=$class->label?>">
+									<input name="pattern<?=$class->id?>" type="radio" id="pattern<?=$class->id.'_'.$pattern->id?>" value="<?=$pattern->id?>"/>
+									<label for="pattern<?=$class->id.'_'.$pattern->id?>"><?=$pattern->label?></label>
+								</div>
+							<?php
+							}
+							?>
+							</div>
+						</div>
+						<div class="input-field add_item" id="<?=$class->id?>">
+							<a class="waves-effect waves-light green btn col offset-s10 s2">아이템 추가<i class="mdi-content-add left"></i></a>
+						</div>
+					</div>
+				<?php
+				}
+				?>
+			</div>
 		</div>
 		<div class="col s4">
 			<div class="col s12 center" style="height: 900px">
