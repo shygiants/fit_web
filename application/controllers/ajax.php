@@ -20,7 +20,7 @@ class Ajax extends Fit_Controller {
 		if (!($this->session->userdata('is_login'))
 		 || !($this->session->userdata('is_editor')))
 		{
-			_response(array('success', 'false'));
+			$this->_response(array('success', 'false'));
 		}
 
 		$this->load->model('fashion_model');
@@ -28,6 +28,6 @@ class Ajax extends Fit_Controller {
 
 		$this->fashion_model->add($fashionData);
 
-		_response(array('success', 'true'));
+		$this->_response(array('success', 'true'));
 	}
 }
