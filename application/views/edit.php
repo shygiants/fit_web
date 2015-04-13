@@ -2,8 +2,8 @@
 	<div class="row">
 	</div>
 	<div class="row">
-		<div class="col s8">
-			<form action="<?=base_url('graphic/add')?>" method="post">
+		<div class="col s7">
+			<form id="form" action="<?=base_url('graphic/add')?>" method="post">
 				<input name="editor_id" type="hidden" value="<?=$editor_id?>">
 				<div class="row">
 					<button class="btn waves-effect waves-light green" type="submit">등록
@@ -119,7 +119,7 @@
 				?>
 			</div>
 		</div>
-		<div class="col s4">
+		<div class="col s5">
 			<div class="col s12 center" style="height: 900px">
 				<img src="#" id="item_img" class="responsive-img card">
 			</div>

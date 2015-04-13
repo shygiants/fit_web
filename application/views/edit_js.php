@@ -1,6 +1,7 @@
 <script>
 
 	var index = 0;
+	var items = [];
 
 	$("#gender_man").on( "click", function() {
 		$(".hide").removeClass("hide");
@@ -20,11 +21,6 @@
 		var pattern_id = $("input[name=pattern" + class_id + "]:checked").val();
 		$("input[name=pattern" + class_id + "]:checked").prop( "checked", false );
 
-		$('#fashion').before(
-			'<input name="type_' + index + '" type="hidden" value="' + type_id + '"/>' +
-			'<input name="color_' + index + '" type="hidden" value="' + color_id + '"/>' + 
-			'<input name="pattern_' + index + '" type="hidden" value="' + pattern_id + '"/>');
-		
 		var class_label;
 		var type_label;
 		var color_label;
@@ -55,15 +51,45 @@
 				'<p>' + pattern_label + ' ' + color_label + ' ' + type_label + '</p>' + 
 				'</div>' + 
 				'<div class="card-action">' + 
-				'<a href="#">This is a link</a>' + 
+				'<a href="#">This is a link</a>' + // TODO: Delete item
 				'</div>' + 
 				'</div>' + 
 				'</div>'
 				);
-				}
+
+				var item = {
+					'type_id':type_id,
+					'color_id':color_id,
+					'pattern_id':pattern_id
+				};
+
+				items.push(item);
+
+				console.log('item', item);
+				console.log('items', items);
+			}
 		});
 
-		index++;
+		index++;		
+	});
+
+	$('#form').submit(function(event) {
+		var form_data = $( this ).serializeArray();
+		form_data.push({
+			name:'items',
+			value: items
+		});
+		
+		$.ajax({
+			url:'/ajax/addFashion',
+			type:'post',
+			data:'query=' + JSON.stringify(form_data),
+			success:function(data) {
+				window.location.replace("/graphic/feed");
+			}
+		});
+
+		event.preventDefault();
 	});
 
 	$('#item_img').error(function() {

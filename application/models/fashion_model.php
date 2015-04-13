@@ -54,25 +54,33 @@ class Fashion_model extends CI_Model {
 	function add($data)
 	{
 		foreach ($data as $key => $token) {
-			if ($key)
+			if ($token->name != 'items')
+				$fashionTuple[$token->name] = $token->value;
+			else
+				$itemTuples = $token->value;
 		}
 
 		$this->db->set('created_date', 'NOW()', FALSE);
-		$this->db->insert('Item', $data);
+		$this->db->insert('Fashion', $fashionTuple);
 
-		$id = $this->db->insert_id();
+		$fashion_id = $this->db->insert_id();
 
 		$this->load->helper('path');
 
-		$file_name = $data['editor_id'].'_'.$id.'.jpg';
+		$file_name = $fashionTuple['editor_id'].'_'.$fashion_id.'.jpg';
 
 		$relative_path = 'resource/itemImg/';
 		$absolute_path = set_realpath($relative_path); 
 		$destination_path = $absolute_path.$file_name;
-		copy($data['img_path'], $destination_path);
+		copy($fashionTuple['img_path'], $destination_path);
 
-		$this->db->where('id', $id);
-		$this->db->update('Item', array('img_path' => $relative_path.$file_name));
+		$this->db->where('id', $fashion_id);
+		$this->db->update('Fashion', array('img_path' => $relative_path.$file_name));
+
+		foreach ($itemTuples as $key => $itemTuple) {
+			$this->db->set('fashion_id', $fashion_id);
+			$this->db->insert('Item', $itemTuple);
+		}
 	}
 
 	function get($editor_id = 0)
@@ -100,9 +108,9 @@ class Fashion_model extends CI_Model {
 	function getCardData($editor_id = 0)
 	{
 		$result = $this->db
-		->select('img_path, Item.editor_id, first_name, last_name')
-		->from('Item, User')
-		->where('User.editor_id = Item.editor_id')
+		->select('img_path, Fashion.editor_id, first_name, last_name')
+		->from('Fashion, User')
+		->where('User.editor_id = Fashion.editor_id')
 		->get()->result();
 
 		foreach ($result as $row)

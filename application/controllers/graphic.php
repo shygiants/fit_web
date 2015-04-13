@@ -88,24 +88,6 @@ class Graphic extends Fit_Controller {
 		$this->load->view('edit_js');
 	}
 
-	public function add()
-	{
-		if (!($this->session->userdata('is_login'))
-		 || !($this->session->userdata('is_editor')))
-		{
-			redirect('graphic');
-			return;
-		}
-		$this->load->model('fashion_model');
-		$fashionData = $this->input->post();
-		
-		var_dump($fashionData);
-
-		// $this->fashion_model->add($fashionData);
-
-		// redirect('graphic/feed');
-	}
-
 	public function feed()
 	{
 		if (!($this->session->userdata('is_login')))
