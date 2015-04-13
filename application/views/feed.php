@@ -11,17 +11,15 @@
 			?>
 				<div class="card">
 					<div class="card-image">
-						<img src="<?=$data[$key]->img_path?>">
+						<a class="modal-trigger" href="<?=base_url('graphic/fashion/'.$data[$key]->id)?>">
+							<img src="<?=$data[$key]->img_path?>"/>
+						</a>
 					</div>
 					<div class="card-content right">
-						<h6 class="blue-grey-text text-lighten-2">
+						<p class="grey-text">
 							<?=$data[$key]->last_name.$data[$key]->first_name?>님이 작성
-						</h6>
-						<!-- <a href="#">수정</a> -->
+						</p>
 					</div>
-					<!-- <div class="card-action">
-						
-					</div> -->
 				</div>	
 			<?php
 			}
@@ -30,12 +28,5 @@
 		<?php
 		}
 		?>
-		<div class="col s3">
-
-		</div>
-		<div class="col s3">
-		</div>
-		<div class="col s3">
-		</div>
 	</div>
 </div>

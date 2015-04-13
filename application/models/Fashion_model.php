@@ -83,6 +83,50 @@ class Fashion_model extends CI_Model {
 		}
 	}
 
+	function getFashionById($fashion_id)
+	{
+		$fashionTuple = $this->db
+		->select('img_path, src_link, 
+			Gender.label gender_label,
+			first_name, last_name,
+			Season.label season_label,
+			Style.label style_label,
+			Look.label look_label,
+			Height.label height_label,
+			Age.label age_label,
+			Fashion.created_date created_date')
+		->from('Fashion, User')
+		->join('Gender', 'Gender.id = Fashion.gender_id')
+		->join('Editor', 'Editor.id = Fashion.editor_id')
+		->join('Season', 'Season.id = Fashion.season_id')
+		->join('Style', 'Style.id = Fashion.style_id')
+		->join('Look', 'Look.id = Fashion.look_id')
+		->join('Height', 'Height.id = Fashion.height_id')
+		->join('Age', 'Age.id = Fashion.age_id')
+		->where('Fashion.id', $fashion_id)->get()->row();
+
+		$itemTuples = $this->db->
+		select('
+			Class.label class_label,
+			ItemType.label type_label,
+			Color.label color_label,
+			Pattern.label pattern_label')
+		->from('Item')
+		->join('ItemType', 'ItemType.id = Item.type_id')
+		->join('Color', 'Color.id = Item.color_id')
+		->join('Pattern', 'Pattern.id = Item.pattern_id')
+		->join('Class', 'Class.id = ItemType.class_id')
+		->where('Item.fashion_id', $fashion_id)->get()->result();
+
+		$fashionTuple->img_path = base_url($fashionTuple->img_path);
+
+		$result = array(
+			'fashion' => $fashionTuple,
+			'items' => $itemTuples);
+
+		return $result;
+	}
+
 	function get($editor_id = 0)
 	{
 		$query = $this->db
@@ -108,9 +152,9 @@ class Fashion_model extends CI_Model {
 	function getCardData($editor_id = 0)
 	{
 		$result = $this->db
-		->select('img_path, Fashion.editor_id, first_name, last_name')
-		->from('Fashion, User')
-		->where('User.editor_id = Fashion.editor_id')
+		->select('id, img_path, Fashion.editor_id, first_name, last_name')
+		->from('Fashion')
+		->join('User', 'User.editor_id = Fashion.editor_id')
 		->get()->result();
 
 		foreach ($result as $row)

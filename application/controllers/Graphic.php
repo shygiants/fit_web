@@ -105,6 +105,23 @@ class Graphic extends Fit_Controller {
 		$this->load->view('footer');
 	}
 
+	public function fashion($fashion_id)
+	{
+		if (!($this->session->userdata('is_login')) ||
+			$fashion_id == null)
+		{
+			redirect('graphic');
+			return;
+		}
+
+		$this->load->model('fashion_model');
+		$data = $this->fashion_model->getFashionById($fashion_id);
+
+		$this->_header();
+		$this->load->view('fashion', $data);
+		$this->load->view('footer');
+	}
+
 	public function register()
 	{
 		$this->load->library('form_validation');
