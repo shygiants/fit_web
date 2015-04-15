@@ -13,8 +13,6 @@ class Fashion_model extends CI_Model {
 			new Attribute('gender_id', '성별', $this->db->get('Gender')->result()),
 			new Attribute('season_id', '시즌', $this->db->get('Season')->result()),
 			new Attribute('style_id', '스타일', $this->db->get('Style')->result()),
-			new Attribute('look_id', '체형', $this->db->get('Look')->result()),
-			new Attribute('height_id', '키', $this->db->get('Height')->result()),
 			new Attribute('age_id', '나이', $this->db->get('Age')->result())
 			);
 
@@ -91,8 +89,6 @@ class Fashion_model extends CI_Model {
 			first_name, last_name,
 			Season.label season_label,
 			Style.label style_label,
-			Look.label look_label,
-			Height.label height_label,
 			Age.label age_label,
 			Fashion.created_date created_date')
 		->from('Fashion, User')
@@ -100,8 +96,6 @@ class Fashion_model extends CI_Model {
 		->join('Editor', 'Editor.id = Fashion.editor_id')
 		->join('Season', 'Season.id = Fashion.season_id')
 		->join('Style', 'Style.id = Fashion.style_id')
-		->join('Look', 'Look.id = Fashion.look_id')
-		->join('Height', 'Height.id = Fashion.height_id')
 		->join('Age', 'Age.id = Fashion.age_id')
 		->where('Fashion.id', $fashion_id)->get()->row();
 
@@ -134,15 +128,11 @@ class Fashion_model extends CI_Model {
 			Gender.label 성별,
 			Season.label 시즌, 
 			Style.label 스타일, 
-			Look.label 체형,
-			Height.label 키,
 			Age.label 나이')
 		->from('Item')
 		->join('Gender', 'Gender.id = Item.gender_id')
 		->join('Season', 'Season.id = Item.season_id')
 		->join('Style', 'Style.id = Item.style_id')
-		->join('Look', 'Look.id = Item.look_id')
-		->join('Height', 'Height.id = Item.height_id')
 		->join('Age', 'Age.id = Item.age_id')
 		->get();
 

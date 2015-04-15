@@ -62,20 +62,6 @@
 					</p>
 				</li>
 				<li class="collection-item avatar">
-					<i class="mdi-maps-directions-walk circle teal"></i>
-					<span class="title">외형</span>
-					<p>
-						<?=$fashion->look_label?>
-					</p>
-				</li>
-				<li class="collection-item avatar">
-					<i class="mdi-navigation-unfold-more circle deep-purple"></i>
-					<span class="title">키</span>
-					<p>
-						<?=$fashion->height_label?>
-					</p>
-				</li>
-				<li class="collection-item avatar">
 					<i class="mdi-social-cake circle deep-orange"></i>
 					<span class="title">나이</span>
 					<p>
