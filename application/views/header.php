@@ -35,18 +35,18 @@
 							if (!$is_login)
 							{
 							?>
-								<li><a class="waves-effect waves-light modal-trigger" href="#modal_register">회원가입</a></li>
-								<li><a class="waves-effect waves-light modal-trigger" href="#modal_login">로그인</a></li>
+								<li><a class="modal-trigger" href="#modal_register">회원가입</a></li>
+								<li><a class="modal-trigger" href="#modal_login">로그인</a></li>
 							<?php
 							} else {
 								if ($is_editor)
 								{
 							?>		
-									<li><a class="waves-effect waves-light" href="<?=base_url('graphic/edit')?>">추가</a></li>
+									<li><a href="<?=base_url('graphic/edit')?>">추가</a></li>
 								<?php
 								}
 								?>
-								<li><a class="waves-effect waves-light" href="<?=base_url('graphic/logout')?>">로그아웃</a></li>
+								<li><a href="<?=base_url('graphic/logout')?>">로그아웃</a></li>
 							<?php
 							}
 							?>
