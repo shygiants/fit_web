@@ -24,8 +24,7 @@ class Fashion_model extends CI_Model {
 		return $this->db->get('Class')->result();
 	}
 
-	function getItemTypeByClass()
-	{
+	function getItemTypeByClass() {
 		$classes = $this->db->select('id')->get('Class')->result();
 		foreach ($classes as $class) {
 			$result[$class->id] = $this->db->get_where('ItemType', array('class_id' => $class->id))->result();
@@ -34,23 +33,19 @@ class Fashion_model extends CI_Model {
 		return $result;
 	}
 
-	function getItemType()
-	{
+	function getItemType() {
 		return $this->db->get('ItemType')->result();
 	}
 
-	function getColor()
-	{
+	function getColor() {
 		return $this->db->get('Color')->result();
 	}
 
-	function getPattern()
-	{
+	function getPattern() {
 		return $this->db->get('Pattern')->result();
 	}
 
-	function add($data)
-	{
+	function add($data) {
 		foreach ($data as $key => $token) {
 			if ($token->name != 'items')
 				$fashionTuple[$token->name] = $token->value;
@@ -81,8 +76,7 @@ class Fashion_model extends CI_Model {
 		}
 	}
 
-	function getFashionById($fashion_id)
-	{
+	function getFashionById($fashion_id) {
 		$fashionTuple = $this->db
 		->select('img_path, src_link, 
 			Gender.label gender_label,

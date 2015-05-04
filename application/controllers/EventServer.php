@@ -12,24 +12,25 @@ class EventServer extends Fit_Controller {
 	{
 		// TODO: Form validation
 
-		$userId = $this->input->post('userId');
-		$rating = $this->input->post('rating');
-		$itemId = $this->input->post('itemId');
-		// $userId = "shygiants_web";
-		// $rating = "4";
-		// $itemId = "item_web";
-
-		$client = new EventClient($this->accessKey, $this->eventServerURL);
-		$response = $client->createEvent(array(
-						'event' => 'rate',
-						'entityType' => 'user',
-						'entityId' => $userId,
-						'targetEntityType' => 'item',
-						'targetEntityId' => $itemId,
-						'properties' => array('rating' => $rating)
-						));
+		// if ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->session->userdata('is_login'))
+		// 	$this->_response(array('success' => 'false'));
 		
-		$this->_response($response);
+		$this->load->model('event_model');
+		$this->event_model->setRating($this->input->post());
+
+		// $client = new EventClient($this->accessKey, $this->eventServerURL);
+		// $response = $client->createEvent(array(
+		// 				'event' => 'rate',
+		// 				'entityType' => 'user',
+		// 				'entityId' => $this->input->post('user_id'),
+		// 				'targetEntityType' => 'item',
+		// 				'targetEntityId' => $this->input->post('fashion_id'),
+		// 				'properties' => array(
+		// 					'rating' => $this->event_model->getRating($this->input->post('type_id')))
+		// 				));
+		
+		// $this->_response($response);
+		$this->_response(array('success' => 'true'));
 		// var_dump($response);
 	}
 

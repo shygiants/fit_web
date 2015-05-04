@@ -37,6 +37,12 @@ class Authentication extends Fit_Controller {
 
 	public function login()
 	{
+		if ($_SERVER['REQUEST_METHOD'] != 'POST')
+		{
+			$this->_response(array('error' => 'Invalid method'));
+			return;
+		}
+
 		$this->load->model('user_model');
 		$userData = $this->user_model->getByEmail($this->input->post('email'));
 		
@@ -48,10 +54,10 @@ class Authentication extends Fit_Controller {
 			password_verify($this->input->post('password'), $userData->password))
 		{
 			$this->session->set_userdata('is_login', true);
-			$this->_response(array('is_authenticated' => 'true'));
+			$this->_response(array('is_login' => 'true'));
 		}
 		else
-			$this->_response(array('is_authenticated' => 'false'));
+			$this->_response(array('is_login' => 'false'));
 	}
 
 	public function checkLogin()
