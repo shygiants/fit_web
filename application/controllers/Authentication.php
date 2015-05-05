@@ -5,34 +5,37 @@ class Authentication extends Fit_Controller {
 	public function register()
 	{
 		// TODO: Post validation
-
+		
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(array('error' => 'Invalid method'));
+			return;
+		}
+			
 		$this->load->model('user_model');
 
-		if (!$this->input->post())
-			$this->_response(array('is_registered' => 'false'));
-
-		if ($this->user_model->getByEmail($this->input->post('email')) != null)
-		{
-			$this->_response(array('is_registered' => 'false')); // TODO: Return what's wrong
+		if ($this->user_model->getByEmail($this->input->post('email')) != null) {
+			$this->_response(array(
+			'error' => 'Email is already exists',
+			'exists' => 'true')); // TODO: Return what's wrong
+			return;
 		}
-		else
-		{
-			if (!function_exists('password_hash'))
-				$this->load->helper('password_helper');
-			
-			$hashedPassword = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
-			$userData = array(
-				'email' => $this->input->post('email'),
-				'password' => $hashedPassword,
-				'first_name' => $this->input->post('first_name'),
-				'last_name' => $this->input->post('last_name'),
-				);
-			$userData['password'] = $hashedPassword;
-			$this->user_model->register($userData);
+		
+		if (!function_exists('password_hash'))
+			$this->load->helper('password_helper');
+		
+		$hashedPassword = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+		$userData = array(
+			'email' => $this->input->post('email'),
+			'password' => $hashedPassword,
+			'first_name' => $this->input->post('first_name'),
+			'last_name' => $this->input->post('last_name'),
+			);
+		$userData['password'] = $hashedPassword;
+		$this->user_model->register($userData);
 
-			$this->session->set_userdata('is_login', true);
-			$this->_response(array('is_registered' => 'true'));
-		}
+		$this->session->set_userdata('is_login', true);
+		$this->_response(array('is_login' => 'true'));
+		
 	}
 
 	public function login()

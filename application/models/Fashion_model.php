@@ -133,13 +133,22 @@ class Fashion_model extends CI_Model {
 		return $query->result();
 	}
 
-	function getCardData($editor_id = 0)
+	function getCardData($email = null, $editor_id = 0)
 	{
-		$result = $this->db
-		->select('id, img_path, Fashion.editor_id, first_name, last_name')
-		->from('Fashion')
-		->join('User', 'User.editor_id = Fashion.editor_id')
-		->get()->result();
+		if ($email != null) {
+			$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).') Rates ON Fashion.id = Rates.fashion_id';
+			
+			$result = $this->db->query($query)->result();
+		}
+		else {
+			$result = $this->db
+			->select('Fashion.id, img_path, Fashion.editor_id, first_name, last_name')
+			->from('Fashion')
+			->join('User', 'User.editor_id = Fashion.editor_id')
+			->get()->result();	
+		}
 
 		foreach ($result as $row)
 			$row->img_path = base_url($row->img_path);
