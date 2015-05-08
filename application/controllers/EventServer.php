@@ -5,15 +5,16 @@ use predictionio\EventClient;
 
 class EventServer extends Fit_Controller {
 
-	private $accessKey = 'wERSmq7bExLqaTR9FyJKMJtEOTu0ikH74Sf4ovyLc8G3vWGNsSX2NCa29YVshWLu';
-	private $eventServerURL = 'http://163.152.21.217:7070';
+	// private $accessKey = 'wERSmq7bExLqaTR9FyJKMJtEOTu0ikH74Sf4ovyLc8G3vWGNsSX2NCa29YVshWLu';
+	private $accessKey = 'To5PPEhDmUF3rAnUwHZrn2ORSIZSuf7IOIdAWMXxfT2MZhcGzF31kWIlCJFWZ42j';
+	private $eventServerURL = 'http://52.68.79.109:7070';
 
 	public function rate()
 	{
 		// TODO: Form validation
 
-		// if ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->session->userdata('is_login'))
-		// 	$this->_response(array('success' => 'false'));
+		if ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->session->userdata('is_login'))
+			$this->_response(array('success' => 'false'));
 		
 		$this->load->model('event_model');
 		$this->event_model->setRating($this->input->post());
