@@ -4,7 +4,7 @@ use predictionio\EventClient;
 
 class User_model extends CI_Model {
 	private $accessKey = 'To5PPEhDmUF3rAnUwHZrn2ORSIZSuf7IOIdAWMXxfT2MZhcGzF31kWIlCJFWZ42j';
-	private $eventServerURL = 'http://52.68.79.109:7070';
+	private $eventServerURL = 'http://localhost:7070';
 
 	function __construct()
 	{
@@ -15,8 +15,13 @@ class User_model extends CI_Model {
 	{
 		$this->db->set('created_date', 'NOW()', FALSE);
 		$this->db->insert('User', $data);
-		$client = new EventClient($this->accessKey, $this->eventServerURL);
-		$response = $client->setUser($data['email']);
+		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+	//	$response = $client->setUser($data['email']);
+		$client->createEvent(array(
+						'event' => '$set',
+						'entityType' => 'user',
+						'entityId' => $data['email']
+						));
 	}
 
 	function getByEmail($email)
