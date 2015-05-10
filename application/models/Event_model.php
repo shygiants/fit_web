@@ -1,8 +1,7 @@
 <?php
-class Event_model extends CI_Model {
-	function __construct() {
-		parent::__construct();
-	}
+use predictionio\EventClient;
+
+class Event_model extends Fit_Model {
 
 	public function setRating($rating) {
 		$existing = $this->db->get_where('Rate', array(
@@ -18,6 +17,17 @@ class Event_model extends CI_Model {
 			$this->db->set('created_date', 'NOW()', FALSE);
 			$this->db->insert('Rate', $rating);
 		}
+
+		// $client = new EventClient($this->accessKey, $this->eventServerURL);
+		// $response = $client->createEvent(array(
+		// 				'event' => 'rate',
+		// 				'entityType' => 'user',
+		// 				'entityId' => $this->input->post('user_id'),
+		// 				'targetEntityType' => 'item',
+		// 				'targetEntityId' => $this->input->post('fashion_id'),
+		// 				'properties' => array(
+		// 					'rating' => $this->event_model->getRating($this->input->post('type_id')))
+		// 				));
 	}
 
 	public function getRating($typeId) {

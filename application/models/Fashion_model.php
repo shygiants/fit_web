@@ -1,9 +1,7 @@
 <?php
-class Fashion_model extends CI_Model {
-	function __construct()
-	{
-		parent::__construct();
-	}
+use predictionio\EventClient;
+
+class Fashion_model extends Fit_Model {
 
 	function getAttributes()
 	{
@@ -74,6 +72,9 @@ class Fashion_model extends CI_Model {
 			$this->db->set('fashion_id', $fashion_id);
 			$this->db->insert('Item', $itemTuple);
 		}
+
+		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		$response = $client->setItem($fashion_id);
 	}
 
 	function getFashionById($fashion_id) {
