@@ -7,16 +7,14 @@ class Authentication extends Fit_Controller {
 		// TODO: Post validation
 		
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-			$this->_response(array('error' => 'Invalid method'));
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
 			return;
 		}
 			
 		$this->load->model('user_model');
 
 		if ($this->user_model->getByEmail($this->input->post('email')) != null) {
-			$this->_response(array(
-			'error' => 'Email is already exists',
-			'exists' => 'true')); // TODO: Return what's wrong
+			$this->_response(JSONResponse::createException(JSONResponse::EMAIL)); // TODO: Return what's wrong
 			return;
 		}
 		
@@ -34,7 +32,7 @@ class Authentication extends Fit_Controller {
 		$this->user_model->register($userData);
 
 		$this->session->set_userdata('is_login', true);
-		$this->_response(array('is_login' => 'true'));
+		$this->_response(JSONResponse::isLogin(true));
 		
 	}
 
@@ -42,7 +40,7 @@ class Authentication extends Fit_Controller {
 	{
 		if ($_SERVER['REQUEST_METHOD'] != 'POST')
 		{
-			$this->_response(array('error' => 'Invalid method'));
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
 			return;
 		}
 
@@ -57,22 +55,13 @@ class Authentication extends Fit_Controller {
 			password_verify($this->input->post('password'), $userData->password))
 		{
 			$this->session->set_userdata('is_login', true);
-			$this->_response(array('is_login' => 'true'));
+			$this->_response(JSONResponse::isLogin(true));
 		}
 		else
-			$this->_response(array('is_login' => 'false'));
+			$this->_response(JSONResponse::isLogin(false));
 	}
 
-	public function checkLogin()
-	{
-		if ($this->session->userdata('is_login'))
-		{
-			$this->_response(array('is_login' => 'true'));
-		}
-		else
-		{
-			$this->_response(array('is_login' => 'false'));	
-		}
-
+	public function checkLogin() {
+		$this->_response(JSONResponse::isLogin($this->session->userdata('is_login')));
 	}
 }

@@ -10,11 +10,6 @@ class User_model extends Fit_Model {
 		
 		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
 		$response = $client->setUser($data['email']);
-		// $client->createEvent(array(
-		// 				'event' => '$set',
-		// 				'entityType' => 'user',
-		// 				'entityId' => $data['email']
-		// 				));
 	}
 
 	function getByEmail($email)
