@@ -1,5 +1,4 @@
 <?php
-
 class Attribute {
 
 	public $name, $label, $table;

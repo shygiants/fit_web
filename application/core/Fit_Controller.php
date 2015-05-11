@@ -1,4 +1,6 @@
 <?php
+require_once("application/libraries/JSONResponse.php");
+
 class Fit_Controller extends CI_Controller {
     function __construct()
     {
