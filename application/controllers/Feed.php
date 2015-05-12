@@ -3,13 +3,14 @@
 class Feed extends Fit_Controller {
 
 	public function getAll() {
-		$errorMsg = null;
-		if ($_SERVER['REQUEST_METHOD'] != 'POST')
-			$errorMsg = array('error' => 'Invalid method');
-		else if (!$this->session->userdata('is_login'))
-			$errorMsg = array('error' => 'Not login');
-		if ($errorMsg != null)
-			$this->_response($errorMsg);
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
 
 		$this->load->model('fashion_model');
 		$this->load->model('event_model');
@@ -21,6 +22,24 @@ class Feed extends Fit_Controller {
 		->set_output(json_encode(array(
 			'cards' => $cardData,
 			'rating_types' => $ratingTypes)));
+	}
+
+	public function getDetail() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('fashion_model');
+		$result = $this->fashion_model->getFashionById(
+			$this->input->post('fashion_id'),
+			$this->input->post('user_id'));
+		
+		$this->_response($result);
 	}
 
 }

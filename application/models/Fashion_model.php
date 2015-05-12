@@ -77,22 +77,44 @@ class Fashion_model extends Fit_Model {
 		$response = $client->setItem($fashion_id);
 	}
 
-	function getFashionById($fashion_id) {
-		$fashionTuple = $this->db
-		->select('img_path, src_link, 
-			Gender.label gender_label,
-			first_name, last_name,
-			Season.label season_label,
-			Style.label style_label,
-			Age.label age_label,
-			Fashion.created_date created_date')
-		->from('Fashion, User')
-		->join('Gender', 'Gender.id = Fashion.gender_id')
-		->join('Editor', 'Editor.id = Fashion.editor_id')
-		->join('Season', 'Season.id = Fashion.season_id')
-		->join('Style', 'Style.id = Fashion.style_id')
-		->join('Age', 'Age.id = Fashion.age_id')
-		->where('Fashion.id', $fashion_id)->get()->row();
+	function getFashionById($fashion_id, $user_id = null) {
+		if ($user_id == null) {
+			$fashionTuple = $this->db
+			->select('img_path, src_link, 
+				Gender.label gender_label,
+				first_name, last_name,
+				Season.label season_label,
+				Style.label style_label,
+				Age.label age_label,
+				Fashion.created_date created_date')
+			->from('Fashion, User')
+			->join('Gender', 'Gender.id = Fashion.gender_id')
+			->join('Editor', 'Editor.id = Fashion.editor_id')
+			->join('Season', 'Season.id = Fashion.season_id')
+			->join('Style', 'Style.id = Fashion.style_id')
+			->join('Age', 'Age.id = Fashion.age_id')
+			->where('Fashion.id', $fashion_id)->get()->row();
+		}
+		else {
+			$query = 'SELECT img_path, src_link, 
+				Gender.label gender_label,
+				first_name, last_name,
+				Season.label season_label,
+				Style.label style_label,
+				Age.label age_label,
+				Fashion.created_date created_date,
+				Rates.type_id type_id
+				FROM User, Fashion
+				JOIN Gender ON Gender.id = Fashion.gender_id
+				JOIN Editor ON Editor.id = Fashion.editor_id
+				JOIN Season ON Season.id = Fashion.season_id
+				JOIN Style ON Style.id = Fashion.style_id
+				JOIN Age ON Age.id = Fashion.age_id
+				LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id
+				WHERE Fashion.id = '.$this->db->escape($fashion_id);
+			$fashionTuple = $this->db->query($query)->row();
+		}
+		
 
 		$itemTuples = $this->db->
 		select('

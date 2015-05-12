@@ -3,6 +3,7 @@ class JSONResponse {
 
 	const METHOD = 'InvalidMethodException';
 	const EMAIL = 'EmailAlreadyExistException';
+	const NOT_LOGIN = 'NotLoginException';
 
 	private $array = [];
 
