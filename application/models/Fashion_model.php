@@ -73,8 +73,8 @@ class Fashion_model extends Fit_Model {
 			$this->db->insert('Item', $itemTuple);
 		}
 
-		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
-		$response = $client->setItem($fashion_id);
+		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		// $response = $client->setItem($fashion_id);
 	}
 
 	function getFashionById($fashion_id, $user_id = null) {
@@ -173,6 +173,49 @@ class Fashion_model extends Fit_Model {
 			->get()->result();	
 		}
 
+		foreach ($result as $row)
+			$row->img_path = base_url($row->img_path);
+		
+		return $result;
+	}
+
+	function getFiltered($filters, $email) {
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+		FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+		LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).') Rates ON Fashion.id = Rates.fashion_id';
+
+		$subQuery = 'SELECT DISTINCT fashion_id FROM Item';
+
+		foreach ($filters as $key => $filter) {
+			$subQuery .= ($key == 0)? ' WHERE ' : ' OR ';
+
+			$subQuery .= '(type_id='.$this->db->escape($filter->type_id);
+			if (count($filter->colors) != 0) {
+				$subQuery .= ' AND (';
+				foreach ($filter->colors as $key => $color) {
+					if ($key != 0) {
+						$subQuery .= ' OR ';
+					}
+					$subQuery .= 'color_id='.$this->db->escape($color);
+				}
+				$subQuery .= ')';
+			}
+			if (count($filter->patterns) != 0) {
+				$subQuery .= ' AND (';
+				foreach ($filter->patterns as $key => $pattern) {
+					if ($key != 0) {
+						$subQuery .= ' OR ';
+					}
+					$subQuery .= 'pattern_id='.$this->db->escape($pattern);
+				}
+				$subQuery .= ')';
+			}
+			$subQuery .= ')';
+		}
+
+		$query .= ' WHERE Fashion.id IN ('.$subQuery.')';
+
+		$result = $this->db->query($query)->result();
 		foreach ($result as $row)
 			$row->img_path = base_url($row->img_path);
 		
