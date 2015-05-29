@@ -50,9 +50,9 @@
 				'<span class="card-title">' + class_label + '</span>' + 
 				'<p>' + pattern_label + ' ' + color_label + ' ' + type_label + '</p>' + 
 				'</div>' + 
-				'<div class="card-action">' + 
-				'<a href="#">This is a link</a>' + // TODO: Delete item
-				'</div>' + 
+				// '<div class="card-action">' + 
+				// '<a href="#">This is a link</a>' + // TODO: Delete item
+				// '</div>' + 
 				'</div>' + 
 				'</div>'
 				);
