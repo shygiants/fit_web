@@ -221,6 +221,18 @@ class Fashion_model extends Fit_Model {
 		
 		return $result;
 	}
+
+	function getRated($email) {
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+			JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).' AND type_id != 1) Rates ON Fashion.id = Rates.fashion_id';
+			
+		$result = $this->db->query($query)->result();
+		foreach ($result as $row)
+			$row->img_path = base_url($row->img_path);
+
+		return $result;
+	}
 }
 
 ?>

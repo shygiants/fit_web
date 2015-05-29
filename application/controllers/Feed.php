@@ -74,4 +74,25 @@ class Feed extends Fit_Controller {
 			'cards' => $filtered,
 			'rating_types' => $ratingTypes));
 	}
+
+	public function getRated() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('fashion_model');
+		$this->load->model('event_model');
+
+		$rated = $this->fashion_model->getRated($this->input->post('email'));
+		$ratingTypes = $this->event_model->getRatingTypes();
+
+		$this->_response(array (
+			'cards' => $rated,
+			'rating_types' => $ratingTypes));
+	}
 }

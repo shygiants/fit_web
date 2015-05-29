@@ -7,8 +7,8 @@ class User_model extends Fit_Model {
 		$this->db->set('created_date', 'NOW()', FALSE);
 		$this->db->insert('User', $data);
 		
-		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
-		$response = $client->setUser($data['email']);
+		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		// $response = $client->setUser($data['email']);
 	}
 
 	function getByEmail($email) {

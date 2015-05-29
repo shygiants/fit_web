@@ -2,8 +2,7 @@
 
 class EventServer extends Fit_Controller {
 
-	public function rate()
-	{
+	public function rate() {
 		// TODO: Form validation
 
 		if ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->session->userdata('is_login'))
@@ -17,18 +16,15 @@ class EventServer extends Fit_Controller {
 		// var_dump($response);
 	}
 
-	public function follow()
-	{
+	public function follow() {
 		// TODO
 	}
 
-	public function like()
-	{
+	public function like() {
 		// TODO
 	}
 
-	public function comment()
-	{
+	public function comment() {
 		// TODO
 	}
 }
