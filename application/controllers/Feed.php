@@ -37,8 +37,24 @@ class Feed extends Fit_Controller {
 		$result = $this->fashion_model->getFashionById(
 			$this->input->post('fashion_id'),
 			$this->input->post('user_id'));
-		
+
 		$this->_response($result);
+	}
+
+	public function getComments() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('fashion_model');
+		$result = $this->fashion_model->getComments($this->input->post('fashion_id'));
+
+		$this->_response(array('comments' => $result));
 	}
 
 	public function getSchemaData() {

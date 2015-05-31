@@ -46,5 +46,10 @@ class Event_model extends Fit_Model {
 
 		return $types;
 	}
+
+	public function comment($data) {
+		$this->db->set('created_date', 'NOW()', FALSE);
+		$this->db->insert('Comment', $data);
+	}
 }
 ?>

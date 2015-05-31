@@ -131,9 +131,18 @@ class Fashion_model extends Fit_Model {
 
 		$fashionTuple->img_path = base_url($fashionTuple->img_path);
 
+		$commentTuples = $this->db->
+		select('Comment.id, comment_text, user_id, Comment.created_date, User.nick_name')
+		->from('Comment')
+		->join('User', 'User.email = Comment.user_id')
+		->where('fashion_id', $fashion_id)
+		->order_by('Comment.created_date', 'DESC')
+		->limit(3)->get()->result();
+
 		$result = array(
 			'fashion' => $fashionTuple,
-			'items' => $itemTuples);
+			'items' => $itemTuples,
+			'comments' => $commentTuples);
 
 		return $result;
 	}
@@ -232,6 +241,18 @@ class Fashion_model extends Fit_Model {
 			$row->img_path = base_url($row->img_path);
 
 		return $result;
+	}
+
+	function getComments($fashion_id) {
+		$commentTuples = $this->db->
+		select('Comment.id, comment_text, user_id, Comment.created_date, User.nick_name')
+		->from('Comment')
+		->join('User', 'User.email = Comment.user_id')
+		->where('fashion_id', $fashion_id)
+		->order_by('Comment.created_date', 'DESC')
+		->get()->result();
+
+		return $commentTuples;
 	}
 }
 
