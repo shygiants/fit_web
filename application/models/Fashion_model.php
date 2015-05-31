@@ -98,7 +98,7 @@ class Fashion_model extends Fit_Model {
 		else {
 			$query = 'SELECT img_path, src_link, 
 				Gender.label gender_label,
-				first_name, last_name,
+				first_name, last_name, email,
 				Season.label season_label,
 				Style.label style_label,
 				Age.label age_label,

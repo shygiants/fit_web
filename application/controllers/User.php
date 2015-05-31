@@ -17,6 +17,7 @@ class User extends Fit_Controller {
 		$userData = $this->user_model->getByEmail($email);
 
 		$output = array(
+			'email' => $email,
 			'nick_name' => $userData->nick_name,
 			'first_name' => $userData->first_name,
 			'last_name' => $userData->last_name,
