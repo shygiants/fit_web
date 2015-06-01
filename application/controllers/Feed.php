@@ -23,6 +23,27 @@ class Feed extends Fit_Controller {
 			'rating_types' => $ratingTypes));
 	}
 
+	public function getRecommended() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('fashion_model');
+		$this->load->model('event_model');
+
+		$cardData = $this->fashion_model->getRecommended($this->input->post('email'));
+		$ratingTypes = $this->event_model->getRatingTypes();
+
+		$this->_response(array(
+			'cards' => $cardData,
+			'rating_types' => $ratingTypes));
+	}
+
 	public function getDetail() {
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 			$this->_response(JSONResponse::createException(JSONResponse::METHOD));

@@ -1,5 +1,6 @@
 <?php
 use predictionio\EventClient;
+use predictionio\EngineClient;
 
 class Event_model extends Fit_Model {
 
@@ -18,16 +19,16 @@ class Event_model extends Fit_Model {
 			$this->db->insert('Rate', $rating);
 		}
 
-		// $client = new EventClient($this->accessKey, $this->eventServerURL);
-		// $response = $client->createEvent(array(
-		// 				'event' => 'rate',
-		// 				'entityType' => 'user',
-		// 				'entityId' => $this->input->post('user_id'),
-		// 				'targetEntityType' => 'item',
-		// 				'targetEntityId' => $this->input->post('fashion_id'),
-		// 				'properties' => array(
-		// 					'rating' => $this->event_model->getRating($this->input->post('type_id')))
-		// 				));
+		$client = new EventClient($this->accessKey, $this->eventServerURL);
+		$response = $client->createEvent(array(
+						'event' => 'rate',
+						'entityType' => 'user',
+						'entityId' => $this->input->post('user_id'),
+						'targetEntityType' => 'item',
+						'targetEntityId' => $this->input->post('fashion_id'),
+						'properties' => array(
+							'rating' => $this->event_model->getRating($this->input->post('type_id')))
+						));
 	}
 
 	public function getRating($typeId) {

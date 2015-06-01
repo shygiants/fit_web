@@ -1,5 +1,6 @@
 <?php
 use predictionio\EventClient;
+use predictionio\EngineClient;
 
 class Fashion_model extends Fit_Model {
 
@@ -73,8 +74,8 @@ class Fashion_model extends Fit_Model {
 			$this->db->insert('Item', $itemTuple);
 		}
 
-		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
-		// $response = $client->setItem($fashion_id);
+		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		$response = $client->setItem($fashion_id);
 	}
 
 	function getFashionById($fashion_id, $user_id = null) {
@@ -188,6 +189,32 @@ class Fashion_model extends Fit_Model {
 			$row->img_path = base_url($row->img_path);
 		
 		return $result;
+	}
+
+	function getRecommended($user_id) {
+		$client = new EngineClient($this->engineServerURL, 10, 10);
+		$response = $client->sendQuery(array('user' => $user_id, 'num' => 4));
+
+		$recommended = json_decode($response)->itemScores;
+		
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id';
+
+		foreach ($recommended as $key => $item) {
+			if ($key == 0) {
+				$query .= ' WHERE Fashion.id IN (';
+				$query .= $this->db->escape($item->item);
+			}
+			$query .= ', '.$this->db->escape($item->item);	
+		}
+		$query .= ')';
+		$result = $this->db->query($query)->result();
+
+		foreach ($result as $row)
+			$row->img_path = base_url($row->img_path);
+		
+		return $result;		
 	}
 
 	function getFiltered($filters, $email) {
