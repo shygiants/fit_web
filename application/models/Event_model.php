@@ -35,7 +35,7 @@ class Event_model extends Fit_Model {
 		$rating = $this->db
 		->select('rating')
 		->from('RatingType')
-		->where('type_id', $typeId)->get()->row();
+		->where('id', $typeId)->get()->row();
 
 		return $rating;
 	}
