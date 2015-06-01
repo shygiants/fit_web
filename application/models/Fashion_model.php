@@ -103,13 +103,16 @@ class Fashion_model extends Fit_Model {
 				Style.label style_label,
 				Age.label age_label,
 				Fashion.created_date created_date,
-				Rates.type_id type_id
-				FROM User, Fashion
+				Rates.type_id type_id,
+				follower_id
+				FROM Fashion
 				JOIN Gender ON Gender.id = Fashion.gender_id
 				JOIN Editor ON Editor.id = Fashion.editor_id
+				JOIN User ON Editor.id = User.editor_id
 				JOIN Season ON Season.id = Fashion.season_id
 				JOIN Style ON Style.id = Fashion.style_id
 				JOIN Age ON Age.id = Fashion.age_id
+				LEFT OUTER JOIN (SELECT * FROM Follow WHERE follower_id = '.$this->db->escape($user_id).') Follows ON Follows.followed_id = email
 				LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id
 				WHERE Fashion.id = '.$this->db->escape($fashion_id);
 			$fashionTuple = $this->db->query($query)->row();

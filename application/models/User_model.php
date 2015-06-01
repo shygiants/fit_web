@@ -32,5 +32,12 @@ class User_model extends Fit_Model {
 		$this->db->where('user_id', $email);
 		return $this->db->count_all_results();
 	}
+
+	function isFollowing($follower, $followed) {
+		$this->db->from('Follow');
+		$filter = array('follower_id' => $follower, 'followed_id' => $followed);
+		$this->db->where($filter);
+		return ($this->db->count_all_results() != 0);
+	}
 }
 ?>

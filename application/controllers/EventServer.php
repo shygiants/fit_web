@@ -11,13 +11,23 @@ class EventServer extends Fit_Controller {
 		$this->load->model('event_model');
 		$this->event_model->setRating($this->input->post());
 		
-		// $this->_response($response);
 		$this->_response(array('success' => 'true'));
-		// var_dump($response);
 	}
 
 	public function follow() {
-		// TODO
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('event_model');
+		$result = $this->event_model->follow($this->input->post());
+
+		$this->_response(array('is_following' => $result));
 	}
 
 	public function like() {

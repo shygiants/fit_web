@@ -37,7 +37,7 @@ class Feed extends Fit_Controller {
 		$result = $this->fashion_model->getFashionById(
 			$this->input->post('fashion_id'),
 			$this->input->post('user_id'));
-
+		
 		$this->_response($result);
 	}
 

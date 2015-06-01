@@ -51,5 +51,21 @@ class Event_model extends Fit_Model {
 		$this->db->set('created_date', 'NOW()', FALSE);
 		$this->db->insert('Comment', $data);
 	}
+
+	public function follow($data) {
+		$existing = $this->db->get_where('Follow', $data)->row();
+
+		if ($existing != null) {
+			$this->db
+			->where($data)
+			->delete('Follow');
+			return false;
+		}
+
+		$this->db->set('created_date', 'NOW()', FALSE);
+		$this->db->insert('Follow', $data);
+
+		return true;
+	}
 }
 ?>

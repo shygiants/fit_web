@@ -13,6 +13,7 @@ class User extends Fit_Controller {
 		}
 
 		$email = $this->input->post('email');
+		$viewer_id = $this->input->post('viewer_id');
 		$this->load->model('user_model');
 		$userData = $this->user_model->getByEmail($email);
 
@@ -23,7 +24,8 @@ class User extends Fit_Controller {
 			'last_name' => $userData->last_name,
 			'following' => $this->user_model->getFollowing($email),
 			'follower' => $this->user_model->getFollowed($email),
-			'rating' => $this->user_model->getRating($email)
+			'rating' => $this->user_model->getRating($email),
+			'is_following' => $this->user_model->isFollowing($viewer_id, $email)
 			);
 
 		$this->_response($output);
