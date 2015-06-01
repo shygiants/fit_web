@@ -134,14 +134,13 @@ class Fashion_model extends Fit_Model {
 
 		$fashionTuple->img_path = base_url($fashionTuple->img_path);
 
-		$commentTuples = $this->db->
-		select('Comment.id, comment_text, user_id, Comment.created_date, User.nick_name')
-		->from('Comment')
-		->join('User', 'User.email = Comment.user_id')
-		->where('fashion_id', $fashion_id)
-		->order_by('Comment.created_date', 'DESC')
-		->limit(3)->get()->result();
-
+		$commentTuples = $this->db->query('
+			SELECT Comment.id, comment_text, Comment.user_id, Comment.created_date, User.nick_name, Likes.num_of_likes, UserLikes.user_id userLikes
+			FROM Comment JOIN User ON User.email = Comment.user_id
+			LEFT OUTER JOIN (SELECT COUNT(*) num_of_likes, comment_id FROM LikeComment GROUP BY comment_id) Likes ON Likes.comment_id = Comment.id
+			LEFT OUTER JOIN (SELECT * FROM LikeComment WHERE LikeComment.user_id = '.$this->db->escape($user_id).') UserLikes ON UserLikes.comment_id = Comment.id
+			WHERE fashion_id = '.$this->db->escape($fashion_id).' ORDER BY num_of_likes DESC, Comment.created_date DESC LIMIT 3')->result();
+		
 		$result = array(
 			'fashion' => $fashionTuple,
 			'items' => $itemTuples,
@@ -246,14 +245,13 @@ class Fashion_model extends Fit_Model {
 		return $result;
 	}
 
-	function getComments($fashion_id) {
-		$commentTuples = $this->db->
-		select('Comment.id, comment_text, user_id, Comment.created_date, User.nick_name')
-		->from('Comment')
-		->join('User', 'User.email = Comment.user_id')
-		->where('fashion_id', $fashion_id)
-		->order_by('Comment.created_date', 'DESC')
-		->get()->result();
+	function getComments($fashion_id, $user_id) {
+		$commentTuples = $this->db->query('
+			SELECT Comment.id, comment_text, Comment.user_id, Comment.created_date, User.nick_name, Likes.num_of_likes, UserLikes.user_id userLikes
+			FROM Comment JOIN User ON User.email = Comment.user_id
+			LEFT OUTER JOIN (SELECT COUNT(*) num_of_likes, comment_id FROM LikeComment GROUP BY comment_id) Likes ON Likes.comment_id = Comment.id
+			LEFT OUTER JOIN (SELECT * FROM LikeComment WHERE LikeComment.user_id = '.$this->db->escape($user_id).') UserLikes ON UserLikes.comment_id = Comment.id
+			WHERE fashion_id = '.$this->db->escape($fashion_id).' ORDER BY num_of_likes DESC, Comment.created_date DESC')->result();
 
 		return $commentTuples;
 	}

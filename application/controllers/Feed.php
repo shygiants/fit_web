@@ -52,7 +52,9 @@ class Feed extends Fit_Controller {
 		}
 
 		$this->load->model('fashion_model');
-		$result = $this->fashion_model->getComments($this->input->post('fashion_id'));
+		$result = $this->fashion_model->getComments(
+			$this->input->post('fashion_id'),
+			$this->input->post('user_id'));
 
 		$this->_response(array('comments' => $result));
 	}

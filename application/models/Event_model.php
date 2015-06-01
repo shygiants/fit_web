@@ -67,5 +67,21 @@ class Event_model extends Fit_Model {
 
 		return true;
 	}
+
+	public function likeComment($data) {
+		$existing = $this->db->get_where('LikeComment', $data)->row();
+
+		if ($existing != null) {
+			$this->db
+			->where($data)
+			->delete('LikeComment');
+			return false;
+		}
+
+		$this->db->set('created_date', 'NOW()', FALSE);
+		$this->db->insert('LikeComment', $data);
+
+		return true;
+	}
 }
 ?>
