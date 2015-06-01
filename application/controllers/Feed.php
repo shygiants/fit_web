@@ -36,7 +36,7 @@ class Feed extends Fit_Controller {
 		$this->load->model('fashion_model');
 		$this->load->model('event_model');
 
-		$cardData = $this->fashion_model->getRecommended($this->input->post('email'));
+		$cardData = $this->fashion_model->getRecommended($this->input->post('user_id'));
 		$ratingTypes = $this->event_model->getRatingTypes();
 
 		$this->_response(array(

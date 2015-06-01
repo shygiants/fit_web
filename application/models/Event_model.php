@@ -27,7 +27,7 @@ class Event_model extends Fit_Model {
 						'targetEntityType' => 'item',
 						'targetEntityId' => $this->input->post('fashion_id'),
 						'properties' => array(
-							'rating' => (float)$this->event_model->getRating($this->input->post('type_id')))
+							'rating' => (float)($this->event_model->getRating($this->input->post('type_id'))))
 						));
 	}
 
@@ -37,7 +37,7 @@ class Event_model extends Fit_Model {
 		->from('RatingType')
 		->where('id', $typeId)->get()->row();
 
-		return $rating;
+		return $rating->rating;
 	}
 
 	public function getRatingTypes() {

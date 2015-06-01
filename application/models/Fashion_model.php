@@ -195,18 +195,21 @@ class Fashion_model extends Fit_Model {
 		$client = new EngineClient($this->engineServerURL, 10, 10);
 		$response = $client->sendQuery(array('user' => $user_id, 'num' => 4));
 
-		$recommended = json_decode($response)->itemScores;
+		$recommended = $response['itemScores'];
 		
 		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
 			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id';
 
+		if (count($recommended) == 0)
+			return null;
+
+		$query .= ' WHERE Fashion.id IN (';
 		foreach ($recommended as $key => $item) {
 			if ($key == 0) {
-				$query .= ' WHERE Fashion.id IN (';
-				$query .= $this->db->escape($item->item);
+				$query .= $this->db->escape($item['item']);
 			}
-			$query .= ', '.$this->db->escape($item->item);	
+			$query .= ', '.$this->db->escape($item['item']);	
 		}
 		$query .= ')';
 		$result = $this->db->query($query)->result();
