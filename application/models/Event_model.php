@@ -19,7 +19,7 @@ class Event_model extends Fit_Model {
 			$this->db->insert('Rate', $rating);
 		}
 
-		$client = new EventClient($this->accessKey, $this->eventServerURL);
+		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
 		$response = $client->createEvent(array(
 						'event' => 'rate',
 						'entityType' => 'user',
