@@ -1,5 +1,6 @@
 <?php
 require_once("library/vendor/autoload.php");
+require_once("application/libraries/CollectionTuple.php");
 use predictionio\EventClient;
 use predictionio\EngineClient;
 

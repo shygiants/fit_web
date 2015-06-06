@@ -15,6 +15,7 @@ class User extends Fit_Controller {
 		$email = $this->input->post('email');
 		$viewer_id = $this->input->post('viewer_id');
 		$this->load->model('user_model');
+		
 		$userData = $this->user_model->getByEmail($email);
 
 		$output = array(
@@ -29,6 +30,23 @@ class User extends Fit_Controller {
 			);
 
 		$this->_response($output);
+	}
+
+	public function updateNickName()
+	{
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('user_model');
+		$this->user_model->updateNickName($this->input->post());
+
+		$this->_response(array('success' => true));
 	}
 }
 ?>

@@ -134,4 +134,25 @@ class Feed extends Fit_Controller {
 			'cards' => $rated,
 			'rating_types' => $ratingTypes));
 	}
+
+	public function getCollection() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('fashion_model');
+		$this->load->model('event_model');
+
+		$collection = $this->fashion_model->getCollection($this->input->post());
+		$ratingTypes = $this->event_model->getRatingTypes();
+
+		$this->_response(array (
+			'cards' => $collection,
+			'rating_types' => $ratingTypes));
+	}
 }

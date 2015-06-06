@@ -111,7 +111,7 @@
 			</p>
 		</div>
 		<div class="modal-footer">
-			<button class="modal-action modal-close btn waves-effect waves-light green" type="submit" name="action">로그인
+			<button class="modal-action modal-close btn waves-effect waves-light green" type="submit">로그인
 				<i class="mdi-content-send right"></i>
 			</button>
 		</div>

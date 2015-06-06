@@ -39,5 +39,13 @@ class User_model extends Fit_Model {
 		$this->db->where($filter);
 		return ($this->db->count_all_results() != 0);
 	}
+
+	function updateNickName($data) {
+		$data['email'];
+		$data['nick_name'];
+
+		$this->db->where('email', $data['email'])
+		->update('User', array('nick_name' => $data['nick_name']));
+	}
 }
 ?>

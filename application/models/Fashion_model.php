@@ -74,8 +74,8 @@ class Fashion_model extends Fit_Model {
 			$this->db->insert('Item', $itemTuple);
 		}
 
-		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
-		$response = $client->setItem($fashion_id);
+		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		// $response = $client->setItem($fashion_id);
 	}
 
 	function getFashionById($fashion_id, $user_id = null) {
@@ -192,26 +192,26 @@ class Fashion_model extends Fit_Model {
 	}
 
 	function getRecommended($user_id) {
-		$client = new EngineClient($this->engineServerURL, 10, 10);
-		$response = $client->sendQuery(array('user' => $user_id, 'num' => 4));
+		// $client = new EngineClient($this->engineServerURL, 10, 10);
+		// $response = $client->sendQuery(array('user' => $user_id, 'num' => 4));
 
-		$recommended = $response['itemScores'];
+		// $recommended = $response['itemScores'];
 		
 		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
 			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id';
 
-		if (count($recommended) == 0)
-			return null;
+		// if (count($recommended) == 0)
+		// 	return null;
 
-		$query .= ' WHERE Fashion.id IN (';
-		foreach ($recommended as $key => $item) {
-			if ($key == 0) {
-				$query .= $this->db->escape($item['item']);
-			}
-			$query .= ', '.$this->db->escape($item['item']);	
-		}
-		$query .= ')';
+		// $query .= ' WHERE Fashion.id IN (';
+		// foreach ($recommended as $key => $item) {
+		// 	if ($key == 0) {
+		// 		$query .= $this->db->escape($item['item']);
+		// 	}
+		// 	$query .= ', '.$this->db->escape($item['item']);	
+		// }
+		// $query .= ')';
 		$result = $this->db->query($query)->result();
 
 		foreach ($result as $row)
@@ -266,9 +266,32 @@ class Fashion_model extends Fit_Model {
 	function getRated($email) {
 		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
-			JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).' AND type_id != 1) Rates ON Fashion.id = Rates.fashion_id';
+			JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).' AND type_id != 1) Rates ON Fashion.id = Rates.fashion_id
+			ORDER BY Rates.created_date DESC';
 			
 		$result = $this->db->query($query)->result();
+		foreach ($result as $row)
+			$row->img_path = base_url($row->img_path);
+
+		return $result;
+	}
+
+	function getCollection($data) {
+		$data['collection_id'];
+		$data['user_id'];
+
+		$query = '
+			SELECT Fashion.id, Fashion.img_path, Fashion.editor_id, User.first_name, User.last_name, Rates.type_id type_id
+			FROM Collected JOIN Collection ON Collected.collection_id = Collection.id
+			JOIN Rate ON Rate.id = Collected.event_id
+			JOIN Fashion ON Fashion.id = Rate.fashion_id
+			JOIN User ON User.editor_id = Fashion.editor_id
+			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($data['user_id']).') Rates ON Fashion.id = Rates.fashion_id
+			WHERE Collection.id = '.$this->db->escape($data['collection_id']).'
+			ORDER BY Collected.created_date DESC';
+			
+		$result = $this->db->query($query)->result();
+
 		foreach ($result as $row)
 			$row->img_path = base_url($row->img_path);
 
