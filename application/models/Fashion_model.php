@@ -99,7 +99,7 @@ class Fashion_model extends Fit_Model {
 		else {
 			$query = 'SELECT img_path, src_link, 
 				Gender.label gender_label,
-				first_name, last_name, email,
+				first_name, last_name, email, nick_name, Vendor.name vendor_name,
 				Season.label season_label,
 				Style.label style_label,
 				Age.label age_label,
@@ -109,6 +109,7 @@ class Fashion_model extends Fit_Model {
 				FROM Fashion
 				JOIN Gender ON Gender.id = Fashion.gender_id
 				JOIN Editor ON Editor.id = Fashion.editor_id
+				JOIN Vendor ON Editor.vendor_id = Vendor.id
 				JOIN User ON Editor.id = User.editor_id
 				JOIN Season ON Season.id = Fashion.season_id
 				JOIN Style ON Style.id = Fashion.style_id
@@ -171,9 +172,12 @@ class Fashion_model extends Fit_Model {
 	function getCardData($email = null, $editor_id = 0)
 	{
 		if ($email != null) {
-			$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+			$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
-			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).') Rates ON Fashion.id = Rates.fashion_id';
+			JOIN Editor ON Editor.id = Fashion.editor_id
+			JOIN Vendor ON Editor.vendor_id = Vendor.id
+			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).') Rates ON Fashion.id = Rates.fashion_id
+			ORDER BY Fashion.created_date DESC';
 			
 			$result = $this->db->query($query)->result();
 		}
@@ -197,8 +201,10 @@ class Fashion_model extends Fit_Model {
 
 		// $recommended = $response['itemScores'];
 		
-		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+			JOIN Editor ON Editor.id = Fashion.editor_id
+			JOIN Vendor ON Editor.vendor_id = Vendor.id
 			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id';
 
 		// if (count($recommended) == 0)
@@ -211,7 +217,7 @@ class Fashion_model extends Fit_Model {
 		// 	}
 		// 	$query .= ', '.$this->db->escape($item['item']);	
 		// }
-		// $query .= ')';
+		// $query .= ') ORDER BY Fashion.created_date DESC';
 		$result = $this->db->query($query)->result();
 
 		foreach ($result as $row)
@@ -221,8 +227,10 @@ class Fashion_model extends Fit_Model {
 	}
 
 	function getFiltered($filters, $email) {
-		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
 		FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+		JOIN Editor ON Editor.id = Fashion.editor_id
+		JOIN Vendor ON Editor.vendor_id = Vendor.id
 		LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).') Rates ON Fashion.id = Rates.fashion_id';
 
 		$subQuery = 'SELECT DISTINCT fashion_id FROM Item';
@@ -254,7 +262,7 @@ class Fashion_model extends Fit_Model {
 			$subQuery .= ')';
 		}
 
-		$query .= ' WHERE Fashion.id IN ('.$subQuery.')';
+		$query .= ' WHERE Fashion.id IN ('.$subQuery.') ORDER BY Fashion.created_date DESC';
 
 		$result = $this->db->query($query)->result();
 		foreach ($result as $row)
@@ -264,8 +272,10 @@ class Fashion_model extends Fit_Model {
 	}
 
 	function getRated($email) {
-		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, Rates.type_id type_id
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
+			JOIN Editor ON Editor.id = Fashion.editor_id
+			JOIN Vendor ON Editor.vendor_id = Vendor.id
 			JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($email).' AND type_id != 1) Rates ON Fashion.id = Rates.fashion_id
 			ORDER BY Rates.created_date DESC';
 			
@@ -281,11 +291,13 @@ class Fashion_model extends Fit_Model {
 		$data['user_id'];
 
 		$query = '
-			SELECT Fashion.id, Fashion.img_path, Fashion.editor_id, User.first_name, User.last_name, Rates.type_id type_id
+			SELECT Fashion.id, Fashion.img_path, Fashion.editor_id, User.first_name, User.last_name, User.nick_name, Rates.type_id type_id, Vendor.name vendor_name
 			FROM Collected JOIN Collection ON Collected.collection_id = Collection.id
 			JOIN Rate ON Rate.id = Collected.event_id
 			JOIN Fashion ON Fashion.id = Rate.fashion_id
 			JOIN User ON User.editor_id = Fashion.editor_id
+			JOIN Editor ON Editor.id = Fashion.editor_id
+			JOIN Vendor ON Editor.vendor_id = Vendor.id
 			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($data['user_id']).') Rates ON Fashion.id = Rates.fashion_id
 			WHERE Collection.id = '.$this->db->escape($data['collection_id']).'
 			ORDER BY Collected.created_date DESC';
