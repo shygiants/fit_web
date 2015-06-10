@@ -15,7 +15,7 @@ class Feed extends Fit_Controller {
 		$this->load->model('fashion_model');
 		$this->load->model('event_model');
 
-		$cardData = $this->fashion_model->getCardData($this->input->post('email'));
+		$cardData = $this->fashion_model->getCardData($this->input->post());
 		$ratingTypes = $this->event_model->getRatingTypes();
 
 		$this->_response(array(
@@ -36,7 +36,7 @@ class Feed extends Fit_Controller {
 		$this->load->model('fashion_model');
 		$this->load->model('event_model');
 
-		$cardData = $this->fashion_model->getRecommended($this->input->post('user_id'));
+		$cardData = $this->fashion_model->getRecommended($this->input->post());
 		$ratingTypes = $this->event_model->getRatingTypes();
 
 		$this->_response(array(
@@ -106,7 +106,7 @@ class Feed extends Fit_Controller {
 		$this->load->model('fashion_model');
 		$this->load->model('event_model');
 
-		$filtered = $this->fashion_model->getFiltered(json_decode($this->input->post('filters')), $this->input->post('email'));
+		$filtered = $this->fashion_model->getFiltered(json_decode($this->input->post('filters')), $this->input->post());
 		$ratingTypes = $this->event_model->getRatingTypes();
 
 		$this->_response(array (
@@ -127,7 +127,7 @@ class Feed extends Fit_Controller {
 		$this->load->model('fashion_model');
 		$this->load->model('event_model');
 
-		$rated = $this->fashion_model->getRated($this->input->post('email'));
+		$rated = $this->fashion_model->getRated($this->input->post());
 		$ratingTypes = $this->event_model->getRatingTypes();
 
 		$this->_response(array (
