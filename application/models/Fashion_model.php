@@ -105,6 +105,7 @@ class Fashion_model extends Fit_Model {
 				Age.label age_label,
 				Fashion.created_date created_date,
 				Rates.type_id type_id,
+				Rates.id rate_id,
 				follower_id
 				FROM Fashion
 				JOIN Gender ON Gender.id = Fashion.gender_id
@@ -118,6 +119,11 @@ class Fashion_model extends Fit_Model {
 				LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($user_id).') Rates ON Fashion.id = Rates.fashion_id
 				WHERE Fashion.id = '.$this->db->escape($fashion_id);
 			$fashionTuple = $this->db->query($query)->row();
+			if ($fashionTuple->type_id == null) {
+				$fashionTuple->type_id = 0;
+				$fashionTuple->rate_id = 0;
+			}
+				
 		}
 		
 

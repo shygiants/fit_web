@@ -5,13 +5,21 @@ class EventServer extends Fit_Controller {
 	public function rate() {
 		// TODO: Form validation
 
-		if ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->session->userdata('is_login'))
-			$this->_response(array('success' => 'false'));
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
 		
 		$this->load->model('event_model');
-		$this->event_model->setRating($this->input->post());
+		$insert_id = $this->event_model->setRating($this->input->post());
 		
-		$this->_response(array('success' => 'true'));
+		$this->_response(array(
+			'success' => true,
+			'insert_id' => $insert_id));
 	}
 
 	public function follow() {
@@ -57,7 +65,23 @@ class EventServer extends Fit_Controller {
 		}
 
 		$this->load->model('event_model');
-		$this->event_model->comment($this->input->post());
+		$commentId = $this->event_model->comment($this->input->post());
+
+		$this->_response(array('comment_id' => $commentId));
+	}
+
+	public function collect() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('event_model');
+		$this->event_model->collect($this->input->post());
 
 		$this->_response(array('success' => true));
 	}

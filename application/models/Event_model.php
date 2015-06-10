@@ -13,10 +13,12 @@ class Event_model extends Fit_Model {
 			->where('id', $existing->id)
 			->set('created_date', 'NOW()', FALSE)
 			->update('Rate', array('type_id' => $rating['type_id']));
+			$insert_id = $existing->id;
 		}
 		else {
 			$this->db->set('created_date', 'NOW()', FALSE);
 			$this->db->insert('Rate', $rating);
+			$insert_id = $this->db->insert_id();
 		}
 
 		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
@@ -29,6 +31,8 @@ class Event_model extends Fit_Model {
 		// 				'properties' => array(
 		// 					'rating' => (float)($this->event_model->getRating($this->input->post('type_id'))))
 		// 				));
+
+		return $insert_id;
 	}
 
 	public function getRating($typeId) {
@@ -51,6 +55,8 @@ class Event_model extends Fit_Model {
 	public function comment($data) {
 		$this->db->set('created_date', 'NOW()', FALSE);
 		$this->db->insert('Comment', $data);
+
+		return $this->db->insert_id();
 	}
 
 	public function follow($data) {
@@ -83,6 +89,13 @@ class Event_model extends Fit_Model {
 		$this->db->insert('LikeComment', $data);
 
 		return true;
+	}
+
+	public function collect($data) {
+		if ($this->db->get_where('Collected', $data)->row() == null) {
+			$this->db->set('created_date', 'NOW()', FALSE);
+			$this->db->insert('Collected', $data);
+		}
 	}
 }
 ?>
