@@ -85,5 +85,21 @@ class EventServer extends Fit_Controller {
 
 		$this->_response(array('success' => true));
 	}
+
+	public function likeCollection() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('event_model');
+		$like = $this->event_model->likeCollection($this->input->post());
+
+		$this->_response(array('like' => $like));
+	}
 }
 ?>

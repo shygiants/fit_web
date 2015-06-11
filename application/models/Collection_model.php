@@ -40,5 +40,9 @@ class Collection_model extends Fit_Model {
 		return $result;
 	}
 
+	public function isLiked($data) {
+		return ($this->db->get_where('LikeCollection', $data)->row() != null);
+	}
+
 }
 ?>

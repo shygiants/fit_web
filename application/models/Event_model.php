@@ -91,6 +91,20 @@ class Event_model extends Fit_Model {
 		return true;
 	}
 
+	public function likeCollection($data) {
+		$existing = $this->db->get_where('LikeCollection', $data)->row();
+
+		if ($existing != null) {
+			$this->db->where($data)->delete('LikeCollection');
+			return false;
+		}
+
+		$this->db->set('created_date', 'NOW()', false);
+		$this->db->insert('LikeCollection', $data);
+
+		return true;
+	}
+
 	public function collect($data) {
 		if ($this->db->get_where('Collected', $data)->row() == null) {
 			$this->db->set('created_date', 'NOW()', FALSE);

@@ -33,5 +33,21 @@ class Collection extends Fit_Controller {
 
 		$this->_response(array('collections' => $collections));
 	}
+
+	public function isLiked() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('collection_model');
+		$isLiked = $this->collection_model->isLiked($this->input->post());
+
+		$this->_response(array('isLiked' => $isLiked));
+	}
 }
 ?>

@@ -28,6 +28,7 @@ class Authentication extends Fit_Controller {
 			'first_name' => $this->input->post('first_name'),
 			'last_name' => $this->input->post('last_name'),
 			);
+		
 		$userData['password'] = $hashedPassword;
 		$this->user_model->register($userData);
 
