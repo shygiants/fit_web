@@ -21,16 +21,16 @@ class Event_model extends Fit_Model {
 			$insert_id = $this->db->insert_id();
 		}
 
-		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
-		// $response = $client->createEvent(array(
-		// 				'event' => 'rate',
-		// 				'entityType' => 'user',
-		// 				'entityId' => $this->input->post('user_id'),
-		// 				'targetEntityType' => 'item',
-		// 				'targetEntityId' => $this->input->post('fashion_id'),
-		// 				'properties' => array(
-		// 					'rating' => (float)($this->event_model->getRating($this->input->post('type_id'))))
-		// 				));
+		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		$response = $client->createEvent(array(
+						'event' => 'rate',
+						'entityType' => 'user',
+						'entityId' => $this->input->post('user_id'),
+						'targetEntityType' => 'item',
+						'targetEntityId' => $this->input->post('fashion_id'),
+						'properties' => array(
+							'rating' => (float)($this->event_model->getRating($this->input->post('type_id'))))
+						));
 
 		return $insert_id;
 	}

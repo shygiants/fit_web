@@ -44,5 +44,68 @@ class Collection_model extends Fit_Model {
 		return ($this->db->get_where('LikeCollection', $data)->row() != null);
 	}
 
+	public function getPopular($data) {
+		$collections = $this->db
+		->select('COUNT(*) likes, Collection.id, Collection.user_id, Collection.name, Collection.description, User.first_name, User.last_name, User.nick_name')
+		->from('LikeCollection')
+		->join('Collection', 'Collection.id = LikeCollection.collection_id')
+		->join('User', 'User.email = Collection.user_id')
+		->group_by('Collection.id')
+		->order_by('likes DESC')
+		->limit($data['limit'], $data['offset'])
+		->get()->result();
+
+		$result = [];
+
+		foreach ($collections as $key => $collection) {
+			$thumbnail = $this->db->select('Fashion.img_path')
+			->from('Collected')
+			->join('Collection', 'Collected.collection_id = Collection.id')
+			->join('Rate', 'Rate.id = Collected.event_id')
+			->join('Fashion', 'Fashion.id = Rate.fashion_id')
+			->where('Collection.id', $collection->id)
+			->order_by('Collected.created_date', 'DESC')
+			->get()->row();
+			$thumbnail = ($thumbnail != null)? base_url($thumbnail->img_path) : null;
+			array_push($result, 
+				new CollectionTuple($collection->id, $collection->user_id, $collection->name, $collection->description, $thumbnail, 
+					$collection->last_name, $collection->first_name, $collection->nick_name));
+		}
+
+		return $result;
+	}
+
+	public function getFollowPopular($data) {
+		$collections = $this->db
+		->select('COUNT(*) likes, Collection.id, Collection.user_id, Collection.name, Collection.description, User.first_name, User.last_name, User.nick_name')
+		->from('Follow')
+		->join('LikeCollection', 'LikeCollection.user_id = Follow.followed_id')
+		->join('Collection', 'Collection.id = LikeCollection.collection_id')
+		->join('User', 'User.email = Collection.user_id')
+		->where('Follow.follower_id', $data['user_id'])
+		->group_by('Collection.id')
+		->order_by('likes DESC')
+		->limit($data['limit'], $data['offset'])
+		->get()->result();
+
+		$result = [];
+
+		foreach ($collections as $key => $collection) {
+			$thumbnail = $this->db->select('Fashion.img_path')
+			->from('Collected')
+			->join('Collection', 'Collected.collection_id = Collection.id')
+			->join('Rate', 'Rate.id = Collected.event_id')
+			->join('Fashion', 'Fashion.id = Rate.fashion_id')
+			->where('Collection.id', $collection->id)
+			->order_by('Collected.created_date', 'DESC')
+			->get()->row();
+			$thumbnail = ($thumbnail != null)? base_url($thumbnail->img_path) : null;
+			array_push($result, 
+				new CollectionTuple($collection->id, $collection->user_id, $collection->name, $collection->description, $thumbnail, 
+					$collection->last_name, $collection->first_name, $collection->nick_name));
+		}
+
+		return $result;
+	}
 }
 ?>

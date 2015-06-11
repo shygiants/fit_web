@@ -49,5 +49,37 @@ class Collection extends Fit_Controller {
 
 		$this->_response(array('isLiked' => $isLiked));
 	}
+
+	public function getPopular() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('collection_model');
+		$collections = $this->collection_model->getPopular($this->input->post());
+
+		$this->_response(array('collections' => $collections));
+	}
+
+	public function getFollowPopular() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+			$this->_response(JSONResponse::createException(JSONResponse::METHOD));
+			return;
+		}
+		else if (!$this->session->userdata('is_login')) {
+			$this->_response(JSONResponse::createException(JSONResponse::NOT_LOGIN));
+			return;
+		}
+
+		$this->load->model('collection_model');
+		$collections = $this->collection_model->getFollowPopular($this->input->post());
+
+		$this->_response(array('collections' => $collections));
+	}
 }
 ?>

@@ -74,8 +74,8 @@ class Fashion_model extends Fit_Model {
 			$this->db->insert('Item', $itemTuple);
 		}
 
-		// $client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
-		// $response = $client->setItem($fashion_id);
+		$client = new EventClient($this->accessKey, $this->eventServerURL, 10, 10);
+		$response = $client->setItem($fashion_id);
 	}
 
 	function getFashionById($fashion_id, $user_id = null) {
@@ -202,10 +202,10 @@ class Fashion_model extends Fit_Model {
 	}
 
 	function getRecommended($data) {
-		// $client = new EngineClient($this->engineServerURL, 10, 10);
-		// $response = $client->sendQuery(array('user' => $user_id, 'num' => 4));
+		$client = new EngineClient($this->engineServerURL, 10, 10);
+		$response = $client->sendQuery(array('user' => $user_id, 'num' => 20));
 
-		// $recommended = $response['itemScores'];
+		$recommended = $response['itemScores'];
 		
 		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
@@ -213,17 +213,17 @@ class Fashion_model extends Fit_Model {
 			JOIN Vendor ON Editor.vendor_id = Vendor.id
 			LEFT OUTER JOIN (SELECT * FROM Rate WHERE user_id = '.$this->db->escape($data['user_id']).') Rates ON Fashion.id = Rates.fashion_id ';
 
-		// if (count($recommended) == 0)
-		// 	return null;
+		if (count($recommended) == 0)
+			return null;
 
-		// $query .= 'WHERE Fashion.id IN (';
-		// foreach ($recommended as $key => $item) {
-		// 	if ($key == 0) {
-		// 		$query .= $this->db->escape($item['item']);
-		// 	}
-		// 	$query .= ', '.$this->db->escape($item['item']);	
-		// }
-		// $query .= ') ';
+		$query .= 'WHERE Fashion.id IN (';
+		foreach ($recommended as $key => $item) {
+			if ($key == 0) {
+				$query .= $this->db->escape($item['item']);
+			}
+			$query .= ', '.$this->db->escape($item['item']);	
+		}
+		$query .= ') ';
 		$query .= 'ORDER BY Fashion.created_date DESC LIMIT '.$data['limit'].' OFFSET '.$data['offset'];
 		$result = $this->db->query($query)->result();
 
