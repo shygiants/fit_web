@@ -178,7 +178,7 @@ class Fashion_model extends Fit_Model {
 	function getCardData($data = null, $editor_id = 0)
 	{
 		if ($data != null) {
-			$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
+			$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name, email
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
 			JOIN Editor ON Editor.id = Fashion.editor_id
 			JOIN Vendor ON Editor.vendor_id = Vendor.id
@@ -207,7 +207,7 @@ class Fashion_model extends Fit_Model {
 
 		$recommended = $response['itemScores'];
 		
-		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name, email
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
 			JOIN Editor ON Editor.id = Fashion.editor_id
 			JOIN Vendor ON Editor.vendor_id = Vendor.id
@@ -234,7 +234,7 @@ class Fashion_model extends Fit_Model {
 	}
 
 	function getFiltered($filters, $data) {
-		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name
+		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name, Rates.type_id type_id, Vendor.name vendor_name, email
 		FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
 		JOIN Editor ON Editor.id = Fashion.editor_id
 		JOIN Vendor ON Editor.vendor_id = Vendor.id
@@ -281,7 +281,7 @@ class Fashion_model extends Fit_Model {
 
 	function getRated($data) {
 		$query = 'SELECT Fashion.id, img_path, Fashion.editor_id, first_name, last_name, nick_name,
-			Rates.type_id type_id, Vendor.name vendor_name
+			Rates.type_id type_id, Vendor.name vendor_name, email
 			FROM Fashion JOIN User ON User.editor_id = Fashion.editor_id
 			JOIN Editor ON Editor.id = Fashion.editor_id
 			JOIN Vendor ON Editor.vendor_id = Vendor.id
@@ -298,7 +298,7 @@ class Fashion_model extends Fit_Model {
 
 	function getCollection($data) {
 		$query = '
-			SELECT Fashion.id, Fashion.img_path, Fashion.editor_id, User.first_name, User.last_name, User.nick_name, Rates.type_id type_id, Vendor.name vendor_name
+			SELECT Fashion.id, Fashion.img_path, Fashion.editor_id, User.first_name, User.last_name, User.nick_name, Rates.type_id type_id, Vendor.name vendor_name, User.email
 			FROM Collected JOIN Collection ON Collected.collection_id = Collection.id
 			JOIN Rate ON Rate.id = Collected.event_id
 			JOIN Fashion ON Fashion.id = Rate.fashion_id
