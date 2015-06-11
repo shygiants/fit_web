@@ -203,7 +203,7 @@ class Fashion_model extends Fit_Model {
 
 	function getRecommended($data) {
 		$client = new EngineClient($this->engineServerURL, 10, 10);
-		$response = $client->sendQuery(array('user' => $user_id, 'num' => 20));
+		$response = $client->sendQuery(array('user' => $data['user_id'], 'num' => 20));
 
 		$recommended = $response['itemScores'];
 		
